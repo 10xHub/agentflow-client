@@ -266,15 +266,10 @@ export async function invoke(
 
 /**
  * Clean content blocks by removing empty arrays and undefined values
- * Also simplify to string format if it's a simple text message
+ * Server requires array of content blocks
  */
-function cleanContent(content: any[]): any {
-    // If it's a single text block, send as string
-    if (content.length === 1 && content[0].type === 'text') {
-        return content[0].text;
-    }
-    
-    // Otherwise send as array of blocks
+function cleanContent(content: any[]): any[] {
+    // Always return as array of blocks (server requires this format)
     return content.map(block => {
         const cleaned: any = {};
         
@@ -303,11 +298,11 @@ function serializeMessage(message: Message): any {
         content: cleanContent(message.content)
     };
 
-    // message_id: use 0 if not set (server will generate one)
+    // message_id: use "0" if not set (server will generate one)
     if (message.message_id !== null && message.message_id !== undefined) {
-        serialized.message_id = message.message_id;
+        serialized.message_id = String(message.message_id);
     } else {
-        serialized.message_id = 0;
+        serialized.message_id = "0";
     }
 
     // Only include optional fields if they are explicitly set
