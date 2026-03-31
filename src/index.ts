@@ -78,6 +78,9 @@ export * from './endpoints/listMemories.js';
 // Export forget memories types
 export * from './endpoints/forgetMemories.js';
 
+// Export file upload / multimodal types
+export * from './endpoints/files.js';
+
 // Export shared metadata types
 export * from './endpoints/metadata.js';
 

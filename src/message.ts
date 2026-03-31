@@ -332,4 +332,81 @@ export class Message {
         }
         this.content.push(block);
     }
+
+    // ------------------------------------------------------------------
+    // Multimodal convenience constructors (Sprint 5.3)
+    // ------------------------------------------------------------------
+
+    /**
+     * Create a message with an image (via URL or base64).
+     *
+     * @example
+     * ```ts
+     * const msg = Message.withImage('Describe this', 'https://example.com/photo.jpg');
+     * const msg2 = Message.withImage('Describe this', 'data:image/png;base64,...');
+     * ```
+     */
+    static withImage(
+        text: string,
+        imageUrl: string,
+        role: 'user' | 'assistant' | 'system' = 'user'
+    ): Message {
+        return new Message(role, [
+            new TextBlock(text),
+            new ImageBlock(new MediaRef('url', imageUrl, undefined, undefined, undefined)),
+        ]);
+    }
+
+    /**
+     * Create a message with a file reference (e.g. from uploadFile result).
+     *
+     * @example
+     * ```ts
+     * const upload = await client.uploadFile(pdfFile);
+     * const msg = Message.withFile('Summarize this PDF', upload.data.file_id, 'application/pdf');
+     * ```
+     */
+    static withFile(
+        text: string,
+        fileId: string,
+        mimeType?: string,
+        role: 'user' | 'assistant' | 'system' = 'user'
+    ): Message {
+        const media = new MediaRef('file_id', undefined, fileId, undefined, mimeType);
+        const isImage = mimeType?.startsWith('image/');
+        const isAudio = mimeType?.startsWith('audio/');
+        const isVideo = mimeType?.startsWith('video/');
+
+        let block: ContentBlock;
+        if (isImage) {
+            block = new ImageBlock(media);
+        } else if (isAudio) {
+            block = new AudioBlock(media);
+        } else if (isVideo) {
+            block = new VideoBlock(media);
+        } else {
+            block = new DocumentBlock(media);
+        }
+
+        return new Message(role, [new TextBlock(text), block]);
+    }
+
+    /**
+     * Create a multimodal message with arbitrary content blocks.
+     *
+     * @example
+     * ```ts
+     * const msg = Message.multimodal([
+     *   new TextBlock('Look at these'),
+     *   new ImageBlock(new MediaRef('url', 'https://...')),
+     *   new ImageBlock(new MediaRef('url', 'https://...')),
+     * ]);
+     * ```
+     */
+    static multimodal(
+        blocks: ContentBlock[],
+        role: 'user' | 'assistant' | 'system' = 'user'
+    ): Message {
+        return new Message(role, blocks);
+    }
 }

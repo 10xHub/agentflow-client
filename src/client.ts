@@ -89,6 +89,16 @@ import {
     SetupGraphResponse,
     RemoteTool
 } from './endpoints/setupGraph.js';
+import {
+    uploadFile as uploadFileEndpoint,
+    getFile as getFileEndpoint,
+    getFileInfo as getFileInfoEndpoint,
+    getMultimodalConfig as getMultimodalConfigEndpoint,
+    FileUploadContext,
+    FileUploadResponse,
+    FileInfoResponse,
+    MultimodalConfigResponse
+} from './endpoints/files.js';
 
 export interface AgentFlowConfig {
     baseUrl: string;
@@ -837,6 +847,74 @@ export class AgentFlowClient {
         };
 
         return forgetMemoriesEndpoint(context, request);
+    }
+
+    // ------------------------------------------------------------------
+    // Files / Multimodal API
+    // ------------------------------------------------------------------
+
+    /**
+     * Upload a file (image, audio, document) to the server.
+     * Returns file metadata including file_id for use in multimodal messages.
+     *
+     * @param file - A File, Blob, or { data: Blob; filename: string } object
+     * @returns FileUploadResponse with file_id and metadata
+     *
+     * @example
+     * ```ts
+     * const result = await client.uploadFile(file);
+     * const msg = Message.withImage('Describe this', result.data.url);
+     * ```
+     */
+    async uploadFile(
+        file: File | Blob | { data: Blob; filename: string }
+    ): Promise<FileUploadResponse> {
+        const context: FileUploadContext = {
+            baseUrl: this.baseUrl,
+            authToken: this.authToken,
+            timeout: this.timeout,
+            debug: this.debug,
+        };
+        return uploadFileEndpoint(context, file);
+    }
+
+    /**
+     * Download a file by its file_id. Returns raw Blob.
+     */
+    async getFile(fileId: string): Promise<Blob> {
+        const context: FileUploadContext = {
+            baseUrl: this.baseUrl,
+            authToken: this.authToken,
+            timeout: this.timeout,
+            debug: this.debug,
+        };
+        return getFileEndpoint(context, fileId);
+    }
+
+    /**
+     * Get metadata about a stored file.
+     */
+    async getFileInfo(fileId: string): Promise<FileInfoResponse> {
+        const context: FileUploadContext = {
+            baseUrl: this.baseUrl,
+            authToken: this.authToken,
+            timeout: this.timeout,
+            debug: this.debug,
+        };
+        return getFileInfoEndpoint(context, fileId);
+    }
+
+    /**
+     * Get the current multimodal configuration from the server.
+     */
+    async getMultimodalConfig(): Promise<MultimodalConfigResponse> {
+        const context: FileUploadContext = {
+            baseUrl: this.baseUrl,
+            authToken: this.authToken,
+            timeout: this.timeout,
+            debug: this.debug,
+        };
+        return getMultimodalConfigEndpoint(context);
     }
 
     /**
