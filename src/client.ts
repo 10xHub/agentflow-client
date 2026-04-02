@@ -93,9 +93,11 @@ import {
     uploadFile as uploadFileEndpoint,
     getFile as getFileEndpoint,
     getFileInfo as getFileInfoEndpoint,
+    getFileAccessUrl as getFileAccessUrlEndpoint,
     getMultimodalConfig as getMultimodalConfigEndpoint,
     FileUploadContext,
     FileUploadResponse,
+    FileAccessUrlResponse,
     FileInfoResponse,
     MultimodalConfigResponse
 } from './endpoints/files.js';
@@ -902,6 +904,21 @@ export class AgentFlowClient {
             debug: this.debug,
         };
         return getFileInfoEndpoint(context, fileId);
+    }
+
+    /**
+     * Get the best access URL for a stored file.
+     * For cloud-backed media this will typically be a signed URL.
+     * For local or memory-backed media this may fall back to the API file route.
+     */
+    async getFileAccessUrl(fileId: string): Promise<FileAccessUrlResponse> {
+        const context: FileUploadContext = {
+            baseUrl: this.baseUrl,
+            authToken: this.authToken,
+            timeout: this.timeout,
+            debug: this.debug,
+        };
+        return getFileAccessUrlEndpoint(context, fileId);
     }
 
     /**

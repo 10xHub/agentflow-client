@@ -94,6 +94,25 @@ function ChatComponent() {
 }
 ```
 
+### File Uploads And Access URLs
+
+```typescript
+const upload = await client.uploadFile(file);
+
+// Best URL for rendering/downloading in the UI.
+// Cloud-backed deployments typically return a signed URL here.
+const accessUrl = upload.data.direct_url ?? upload.data.url;
+
+const fileInfo = await client.getFileInfo(upload.data.file_id);
+const fileUrl = await client.getFileAccessUrl(upload.data.file_id);
+
+const msg = Message.withFile(
+  'Summarize this document',
+  upload.data.file_id,
+  upload.data.mime_type
+);
+```
+
 ### Tool Registration
 
 **⚠️ Important:** Remote tools (registered client-side) should **only** be used for browser-level APIs like `localStorage`, `navigator.geolocation`, etc. For most operations (database queries, external API calls, calculations), define your tools in the Python backend instead. See [Tools Guide](docs/tools-guide.md#remote-tools-vs-backend-tools) for details.

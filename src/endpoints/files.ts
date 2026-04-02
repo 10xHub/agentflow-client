@@ -22,6 +22,8 @@ export interface FileUploadResponse {
         filename: string;
         extracted_text: string | null;
         url: string;
+        direct_url?: string | null;
+        direct_url_expires_at?: number | null;
     };
     metadata?: {
         request_id: string;
@@ -35,7 +37,24 @@ export interface FileInfoResponse {
         file_id: string;
         mime_type: string;
         size_bytes: number;
+        filename?: string | null;
         extracted_text: string | null;
+        direct_url?: string | null;
+        direct_url_expires_at?: number | null;
+    };
+    metadata?: {
+        request_id: string;
+        timestamp: string;
+        message: string;
+    };
+}
+
+export interface FileAccessUrlResponse {
+    data: {
+        file_id: string;
+        url: string;
+        expires_at?: number | null;
+        mime_type: string;
     };
     metadata?: {
         request_id: string;
@@ -188,6 +207,46 @@ export async function getFileInfo(
         }
 
         return (await response.json()) as FileInfoResponse;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Get file access URL
+// ---------------------------------------------------------------------------
+export async function getFileAccessUrl(
+    ctx: FileUploadContext,
+    fileId: string
+): Promise<FileAccessUrlResponse> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), ctx.timeout);
+
+    try {
+        const response = await fetch(
+            `${ctx.baseUrl}/v1/files/${encodeURIComponent(fileId)}/url`,
+            {
+                method: 'GET',
+                headers: {
+                    ...(ctx.authToken && { Authorization: `Bearer ${ctx.authToken}` }),
+                },
+                signal: controller.signal,
+            }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            const error = await createErrorFromResponse(
+                response,
+                'File access URL request failed',
+                `/v1/files/${fileId}/url`,
+                'GET'
+            );
+            throw error;
+        }
+
+        return (await response.json()) as FileAccessUrlResponse;
     } finally {
         clearTimeout(timeoutId);
     }

@@ -24,6 +24,11 @@ Complete API reference for all endpoints in the @10xscale/agentflow-client libra
 - [Execution](#execution)
   - [invoke()](#invoke)
   - [stream()](#stream)
+- [Files](#files)
+  - [uploadFile()](#uploadfile)
+  - [getFileInfo()](#getfileinfo)
+  - [getFileAccessUrl()](#getfileaccessurl)
+  - [getFile()](#getfile)
 - [Memory Management](#memory-management)
   - [storeMemory()](#storememory)
   - [searchMemory()](#searchmemory)
@@ -950,6 +955,59 @@ Stream provides progressive updates as the agent processes:
 - `NotFoundError` (404) - Graph not found
 - `ValidationError` (422) - Message validation failed
 - `ServerError` (500+) - Server issues
+
+---
+
+## Files
+
+### uploadFile()
+
+Upload a file for multimodal use.
+
+**Endpoint:** `POST /v1/files/upload`
+
+**Signature:**
+```typescript
+uploadFile(file: File | Blob | { data: Blob; filename: string }): Promise<FileUploadResponse>
+```
+
+**Returns:**
+```typescript
+interface FileUploadResponse {
+  data: {
+    file_id: string;
+    mime_type: string;
+    size_bytes: number;
+    filename: string;
+    extracted_text: string | null;
+    url: string;
+    direct_url?: string | null;
+    direct_url_expires_at?: number | null;
+  };
+}
+```
+
+### getFileInfo()
+
+Fetch file metadata without downloading the blob.
+
+**Endpoint:** `GET /v1/files/{file_id}/info`
+
+### getFileAccessUrl()
+
+Fetch the best access URL for a file.
+
+**Endpoint:** `GET /v1/files/{file_id}/url`
+
+**Notes:**
+- Cloud-backed media typically returns a signed URL.
+- Local or memory-backed media may fall back to the API file route.
+
+### getFile()
+
+Download the raw file bytes as a `Blob`.
+
+**Endpoint:** `GET /v1/files/{file_id}`
 
 ---
 

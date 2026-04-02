@@ -102,6 +102,7 @@ describe('File Endpoint Types', () => {
         expect(mod.uploadFile).toBeDefined();
         expect(mod.getFile).toBeDefined();
         expect(mod.getFileInfo).toBeDefined();
+        expect(mod.getFileAccessUrl).toBeDefined();
         expect(mod.getMultimodalConfig).toBeDefined();
     });
 });
@@ -126,6 +127,12 @@ describe('AgentFlowClient file methods', () => {
         const { AgentFlowClient } = await import('../src/client');
         const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
         expect(typeof client.getFileInfo).toBe('function');
+    });
+
+    it('should have getFileAccessUrl method', async () => {
+        const { AgentFlowClient } = await import('../src/client');
+        const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+        expect(typeof client.getFileAccessUrl).toBe('function');
     });
 
     it('should have getMultimodalConfig method', async () => {
@@ -156,6 +163,8 @@ describe('uploadFile with mocked fetch', () => {
                     filename: 'test.png',
                     extracted_text: null,
                     url: '/v1/files/abc123',
+                    direct_url: 'https://signed.example.com/abc123',
+                    direct_url_expires_at: 1712000000,
                 },
             }),
         };
@@ -172,6 +181,7 @@ describe('uploadFile with mocked fetch', () => {
         expect(callArgs[0]).toBe('http://localhost:8000/v1/files/upload');
         expect(callArgs[1].method).toBe('POST');
         expect(result.data.file_id).toBe('abc123');
+        expect(result.data.direct_url).toBe('https://signed.example.com/abc123');
 
         globalThis.fetch = originalFetch;
     });
@@ -191,6 +201,35 @@ describe('uploadFile with mocked fetch', () => {
 
         const callArgs = (globalThis.fetch as any).mock.calls[0];
         expect(callArgs[1].headers.Authorization).toBe('Bearer my-token');
+
+        globalThis.fetch = originalFetch;
+    });
+
+    it('should call /v1/files/{file_id}/url for access URL lookup', async () => {
+        const mockResponse = {
+            ok: true,
+            json: async () => ({
+                data: {
+                    file_id: 'abc123',
+                    url: 'https://signed.example.com/abc123',
+                    expires_at: 1712000000,
+                    mime_type: 'image/png',
+                },
+            }),
+        };
+        globalThis.fetch = vi.fn().mockResolvedValue(mockResponse) as any;
+
+        const { getFileAccessUrl } = await import('../src/endpoints/files');
+        const result = await getFileAccessUrl(
+            { baseUrl: 'http://localhost:8000', timeout: 5000, debug: false },
+            'abc123'
+        );
+
+        expect(globalThis.fetch).toHaveBeenCalledOnce();
+        const callArgs = (globalThis.fetch as any).mock.calls[0];
+        expect(callArgs[0]).toBe('http://localhost:8000/v1/files/abc123/url');
+        expect(callArgs[1].method).toBe('GET');
+        expect(result.data.url).toBe('https://signed.example.com/abc123');
 
         globalThis.fetch = originalFetch;
     });
