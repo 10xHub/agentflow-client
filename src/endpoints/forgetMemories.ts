@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { MemoryType } from './storeMemory.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface ForgetMemoriesContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface ForgetMemoriesContext extends RequestContext {}
 
 export interface ForgetMemoriesRequest {
     config?: Record<string, any>;
@@ -65,10 +61,10 @@ export async function forgetMemories(
 
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(body),
             ...(context.timeout > 0 && { signal: controller.signal })
         });

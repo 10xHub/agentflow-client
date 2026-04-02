@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface DeleteMemoryContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface DeleteMemoryContext extends RequestContext {}
 
 export interface DeleteMemoryRequest {
     memoryId: string;
@@ -50,11 +46,11 @@ export async function deleteMemory(
 
         const response = await fetch(url, {
             method: 'DELETE',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(body),
             signal: controller.signal
         });

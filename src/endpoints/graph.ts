@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface GraphContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface GraphContext extends RequestContext {}
 
 export interface GraphNode {
     id: string;
@@ -57,11 +53,11 @@ export async function graph(context: GraphContext): Promise<GraphResponse> {
 
         const response = await fetch(`${context.baseUrl}/v1/graph`, {
             method: 'GET',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             signal: controller.signal
         });
 

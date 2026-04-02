@@ -38,13 +38,32 @@ yarn add @10xscale/agentflow-client
 ### 1. Initialize the Client
 
 ```typescript
-import { AgentFlowClient } from '@10xscale/agentflow-client';
+import {
+  AgentFlowClient,
+  basicAuth,
+  headerAuth,
+} from '@10xscale/agentflow-client';
 
 const client = new AgentFlowClient({
-  baseUrl: 'https://your-api-url.com',  // Your AgentFlow API URL
-  authToken: 'your-auth-token',          // Your authentication token
+  baseUrl: 'https://your-api-url.com',   // Your AgentFlow API URL
+  authToken: 'your-auth-token',          // Optional legacy Bearer auth
   timeout: 60000,                        // Optional: 60 second timeout
   debug: true                            // Optional: Enable debug logging
+});
+
+const basicClient = new AgentFlowClient({
+  baseUrl: 'https://your-api-url.com',
+  auth: basicAuth('service-user', 'service-password'),
+});
+
+const apiKeyClient = new AgentFlowClient({
+  baseUrl: 'https://your-api-url.com',
+  auth: headerAuth('X-API-Key', 'your-api-key'),
+});
+
+const sessionClient = new AgentFlowClient({
+  baseUrl: 'https://your-api-url.com',
+  credentials: 'include',
 });
 ```
 

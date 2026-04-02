@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface ClearThreadStateContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface ClearThreadStateContext extends RequestContext {}
 
 export interface ClearThreadStateData {
     success: boolean;
@@ -33,11 +29,11 @@ export async function clearThreadState(
 
         const response = await fetch(`${context.baseUrl}/v1/threads/${threadId}/state`, {
             method: 'DELETE',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             signal: controller.signal
         });
 

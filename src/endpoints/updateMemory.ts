@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface UpdateMemoryContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface UpdateMemoryContext extends RequestContext {}
 
 export interface UpdateMemoryRequest {
     memoryId: string;
@@ -54,10 +50,10 @@ export async function updateMemory(
 
         const response = await fetch(url, {
             method: 'PUT',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(body),
             signal: controller.signal
         });

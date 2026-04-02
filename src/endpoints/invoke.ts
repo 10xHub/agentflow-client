@@ -2,12 +2,9 @@ import { Message } from '../message.js';
 import { AgentState } from '../agent.js';
 import { ToolExecutor } from '../tools.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface InvokeContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
+export interface InvokeContext extends RequestContext {
     toolExecutor?: ToolExecutor;
 }
 
@@ -82,11 +79,11 @@ async function makeSingleInvokeCall(
     try {
         const response = await fetch(`${context.baseUrl}/v1/graph/invoke`, {
             method: 'POST',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(request),
             signal: controller.signal
         });

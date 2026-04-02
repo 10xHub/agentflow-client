@@ -50,10 +50,13 @@ Initialize the AgentFlow client with configuration.
 import { AgentFlowClient } from '@10xscale/agentflow-client';
 
 const client = new AgentFlowClient({
-  baseUrl: string,      // Required: API base URL
-  authToken?: string,   // Optional: Authentication token
-  timeout?: number,     // Optional: Request timeout in ms (default: 300000 = 5min)
-  debug?: boolean       // Optional: Enable debug logging (default: false)
+  baseUrl: string,               // Required: API base URL
+  authToken?: string,            // Optional: legacy Bearer token
+  auth?: AgentFlowAuth,          // Optional: basic/custom header auth
+  headers?: HeadersInit,         // Optional: extra headers for every request
+  credentials?: RequestCredentials, // Optional: cookie/session auth
+  timeout?: number,              // Optional: Request timeout in ms (default: 300000 = 5min)
+  debug?: boolean                // Optional: Enable debug logging (default: false)
 });
 ```
 
@@ -62,7 +65,10 @@ const client = new AgentFlowClient({
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | baseUrl | string | Yes | - | Base URL of the AgentFlow API |
-| authToken | string | No | null | Bearer token for authentication |
+| authToken | string | No | null | Backward-compatible Bearer token |
+| auth | AgentFlowAuth | No | null | Basic auth or custom header-based auth |
+| headers | HeadersInit | No | null | Extra headers applied to every request |
+| credentials | RequestCredentials | No | null | Fetch credentials mode for cookie/session auth |
 | timeout | number | No | 300000 | Request timeout in milliseconds |
 | debug | boolean | No | false | Enable debug logging to console |
 
@@ -74,6 +80,27 @@ const client = new AgentFlowClient({
   authToken: 'your-secret-token',
   timeout: 60000,  // 1 minute
   debug: true
+});
+```
+
+**Additional auth examples:**
+
+```typescript
+import { basicAuth, headerAuth } from '@10xscale/agentflow-client';
+
+const basicClient = new AgentFlowClient({
+  baseUrl: 'https://api.agentflow.example.com',
+  auth: basicAuth('service-user', 'service-password'),
+});
+
+const apiKeyClient = new AgentFlowClient({
+  baseUrl: 'https://api.agentflow.example.com',
+  auth: headerAuth('X-API-Key', 'your-api-key'),
+});
+
+const sessionClient = new AgentFlowClient({
+  baseUrl: 'https://api.agentflow.example.com',
+  credentials: 'include',
 });
 ```
 

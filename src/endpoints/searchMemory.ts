@@ -1,13 +1,9 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 import { MemoryType } from './storeMemory.js';
 
-export interface SearchMemoryContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface SearchMemoryContext extends RequestContext {}
 
 /**
  * Memory retrieval strategies
@@ -96,10 +92,10 @@ export async function searchMemory(
 
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(body),
             signal: controller.signal
         });

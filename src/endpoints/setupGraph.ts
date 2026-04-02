@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface SetupGraphContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface SetupGraphContext extends RequestContext {}
 
 export interface RemoteTool {
     node_name: string;
@@ -52,11 +48,11 @@ export async function setupGraph(
 
         const response = await fetch(`${context.baseUrl}/v1/graph/setup`, {
             method: 'POST',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(request),
             signal: controller.signal
         });

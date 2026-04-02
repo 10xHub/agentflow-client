@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface DeleteThreadMessageContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface DeleteThreadMessageContext extends RequestContext {}
 
 export interface DeleteThreadMessageRequest {
     threadId: string | number;
@@ -45,11 +41,11 @@ export async function deleteThreadMessage(
 
         const response = await fetch(url, {
             method: 'DELETE',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify({ config: request.config || {} }),
             signal: controller.signal
         });

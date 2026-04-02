@@ -2,12 +2,9 @@ import { Message } from '../message.js';
 import { AgentState } from '../agent.js';
 import { ToolExecutor } from '../tools.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface StreamContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
+export interface StreamContext extends RequestContext {
     toolExecutor?: ToolExecutor;
 }
 
@@ -222,11 +219,11 @@ async function makeSingleStreamCall(
     try {
         const response = await fetch(`${context.baseUrl}/v1/graph/stream`, {
             method: 'POST',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'Accept': 'application/x-ndjson, application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(request),
             signal: controller.signal
         });
@@ -342,11 +339,11 @@ export async function* streamInvoke(
         try {
             const response = await fetch(`${context.baseUrl}/v1/graph/stream`, {
                 method: 'POST',
-                headers: {
+                headers: buildHeaders(context as RequestContext, {
                     'Content-Type': 'application/json',
                     'Accept': 'application/x-ndjson, application/json',
-                    ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-                },
+                }),
+                ...getRequestCredentials(context as RequestContext),
                 body: JSON.stringify(iterationRequest),
                 signal: controller.signal
             });

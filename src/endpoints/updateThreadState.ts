@@ -1,13 +1,9 @@
 import { ResponseMetadata } from './metadata.js';
 import { AgentState } from '../agent.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface UpdateThreadStateContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface UpdateThreadStateContext extends RequestContext {}
 
 export interface UpdateThreadStateRequest {
     config: Record<string, any>;
@@ -39,11 +35,11 @@ export async function updateThreadState(
 
         const response = await fetch(`${context.baseUrl}/v1/threads/${threadId}/state`, {
             method: 'PUT',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(request),
             signal: controller.signal
         });
