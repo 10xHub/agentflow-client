@@ -3,16 +3,12 @@
  */
 
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-export interface FileUploadContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface FileUploadContext extends RequestContext {}
 
 export interface FileUploadResponse {
     data: {
@@ -107,10 +103,9 @@ export async function uploadFile(
 
         const response = await fetch(`${ctx.baseUrl}/v1/files/upload`, {
             method: 'POST',
-            headers: {
-                ...(ctx.authToken && { Authorization: `Bearer ${ctx.authToken}` }),
-            },
+            headers: buildHeaders(ctx as RequestContext),
             body: formData,
+            ...getRequestCredentials(ctx as RequestContext),
             signal: controller.signal,
         });
 
@@ -148,9 +143,8 @@ export async function getFile(
     try {
         const response = await fetch(`${ctx.baseUrl}/v1/files/${encodeURIComponent(fileId)}`, {
             method: 'GET',
-            headers: {
-                ...(ctx.authToken && { Authorization: `Bearer ${ctx.authToken}` }),
-            },
+            headers: buildHeaders(ctx as RequestContext),
+            ...getRequestCredentials(ctx as RequestContext),
             signal: controller.signal,
         });
 
@@ -187,9 +181,8 @@ export async function getFileInfo(
             `${ctx.baseUrl}/v1/files/${encodeURIComponent(fileId)}/info`,
             {
                 method: 'GET',
-                headers: {
-                    ...(ctx.authToken && { Authorization: `Bearer ${ctx.authToken}` }),
-                },
+                headers: buildHeaders(ctx as RequestContext),
+                ...getRequestCredentials(ctx as RequestContext),
                 signal: controller.signal,
             }
         );
@@ -227,9 +220,8 @@ export async function getFileAccessUrl(
             `${ctx.baseUrl}/v1/files/${encodeURIComponent(fileId)}/url`,
             {
                 method: 'GET',
-                headers: {
-                    ...(ctx.authToken && { Authorization: `Bearer ${ctx.authToken}` }),
-                },
+                headers: buildHeaders(ctx as RequestContext),
+                ...getRequestCredentials(ctx as RequestContext),
                 signal: controller.signal,
             }
         );
@@ -264,10 +256,10 @@ export async function getMultimodalConfig(
     try {
         const response = await fetch(`${ctx.baseUrl}/v1/config/multimodal`, {
             method: 'GET',
-            headers: {
+            headers: buildHeaders(ctx as RequestContext, {
                 accept: 'application/json',
-                ...(ctx.authToken && { Authorization: `Bearer ${ctx.authToken}` }),
-            },
+            }),
+            ...getRequestCredentials(ctx as RequestContext),
             signal: controller.signal,
         });
 

@@ -39,7 +39,7 @@ import { AgentFlowClient, Message } from '@10xscale/agentflow-client';
 // Initialize client
 const client = new AgentFlowClient({
   baseUrl: 'http://localhost:8000',
-  authToken: 'your-token', // optional
+  authToken: 'your-token', // optional legacy Bearer auth
   debug: true              // optional
 });
 
@@ -49,6 +49,36 @@ const result = await client.invoke([
 ]);
 
 console.log(result.messages); // Array of response messages
+```
+
+### Authentication Options
+
+```typescript
+import {
+  AgentFlowClient,
+  basicAuth,
+  headerAuth,
+} from '@10xscale/agentflow-client';
+
+const bearerClient = new AgentFlowClient({
+  baseUrl: 'https://api.example.com',
+  authToken: process.env.AGENTFLOW_TOKEN,
+});
+
+const basicClient = new AgentFlowClient({
+  baseUrl: 'https://api.example.com',
+  auth: basicAuth('service-user', 'service-password'),
+});
+
+const apiKeyClient = new AgentFlowClient({
+  baseUrl: 'https://api.example.com',
+  auth: headerAuth('X-API-Key', process.env.AGENTFLOW_API_KEY!),
+});
+
+const sessionClient = new AgentFlowClient({
+  baseUrl: 'https://api.example.com',
+  credentials: 'include',
+});
 ```
 
 ### Streaming Chat
@@ -239,7 +269,10 @@ Check out the [`examples/`](examples/) directory for complete working examples:
 ```typescript
 const client = new AgentFlowClient({
   baseUrl: string,           // Required: API base URL
-  authToken?: string,        // Optional: Bearer token
+  authToken?: string,        // Optional: legacy Bearer token
+  auth?: AgentFlowAuth,      // Optional: basic/custom header auth
+  headers?: HeadersInit,     // Optional: extra headers for every request
+  credentials?: RequestCredentials, // Optional: cookie/session auth
   timeout?: number,          // Optional: Request timeout (default: 5min)
   debug?: boolean            // Optional: Enable debug logging
 });

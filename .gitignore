@@ -3,3 +3,5 @@ dist
 dist-types
 .serena
 coverage
+src/**/*.d.ts
+src/**/*.d.ts.map

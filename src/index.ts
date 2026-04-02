@@ -7,6 +7,9 @@ export * from './client.js';
 // Export error types and classes
 export * from './errors.js';
 
+// Export request/auth helpers
+export * from './request.js';
+
 // Export ping Response types
 export * from './endpoints/ping.js';
 

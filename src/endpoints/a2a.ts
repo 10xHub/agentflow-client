@@ -12,6 +12,14 @@ import type {
   BroadcastMessageParams,
   NotificationParams,
 } from '../types/a2a';
+import { AgentFlowAuth, buildHeaders, getRequestCredentials } from '../request.js';
+
+export interface A2AClientOptions {
+  authToken?: string;
+  auth?: AgentFlowAuth | null;
+  headers?: HeadersInit;
+  credentials?: RequestCredentials;
+}
 
 /**
  * Agent-to-Agent communication client
@@ -19,25 +27,46 @@ import type {
 export class A2AClient {
   private baseUrl: string;
   private authToken?: string;
+  private auth?: AgentFlowAuth | null;
+  private headers?: HeadersInit;
+  private credentials?: RequestCredentials;
 
-  constructor(baseUrl: string, authToken?: string) {
+  constructor(baseUrl: string, authTokenOrOptions?: string | A2AClientOptions) {
     this.baseUrl = baseUrl;
-    this.authToken = authToken;
+
+    if (typeof authTokenOrOptions === 'string') {
+      this.authToken = authTokenOrOptions;
+      return;
+    }
+
+    if (authTokenOrOptions) {
+      this.authToken = authTokenOrOptions.authToken;
+      this.auth = authTokenOrOptions.auth;
+      this.headers = authTokenOrOptions.headers;
+      this.credentials = authTokenOrOptions.credentials;
+    }
   }
 
   /**
    * Get headers with optional authentication
    */
   private getHeaders(): HeadersInit {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-    };
+    return buildHeaders(
+      {
+        authToken: this.authToken,
+        auth: this.auth,
+        headers: this.headers,
+      },
+      {
+        'Content-Type': 'application/json',
+      }
+    );
+  }
 
-    if (this.authToken) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
-    }
-
-    return headers;
+  private getRequestOptions(): Pick<RequestInit, 'credentials'> | Record<string, never> {
+    return getRequestCredentials({
+      credentials: this.credentials,
+    });
   }
 
   /**
@@ -54,6 +83,7 @@ export class A2AClient {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify(params),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -71,6 +101,7 @@ export class A2AClient {
     const response = await fetch(`${this.baseUrl}/api/v1/agents/${agentId}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -98,6 +129,7 @@ export class A2AClient {
           ttl: params.ttl,
           context: params.context,
         }),
+        ...this.getRequestOptions(),
       }
     );
 
@@ -123,6 +155,7 @@ export class A2AClient {
           data: params.data || {},
           priority: params.priority || 5,
         }),
+        ...this.getRequestOptions(),
       }
     );
 
@@ -148,6 +181,7 @@ export class A2AClient {
           action: params.action,
           data: params.data || {},
         }),
+        ...this.getRequestOptions(),
       }
     );
 
@@ -175,6 +209,7 @@ export class A2AClient {
     const response = await fetch(url, {
       method: 'GET',
       headers: this.getHeaders(),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -193,6 +228,7 @@ export class A2AClient {
     const response = await fetch(`${this.baseUrl}/api/v1/agents/${agentId}/status`, {
       method: 'GET',
       headers: this.getHeaders(),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -224,6 +260,7 @@ export class A2AClient {
     const response = await fetch(url, {
       method: 'GET',
       headers: this.getHeaders(),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -244,6 +281,7 @@ export class A2AClient {
       {
         method: 'GET',
         headers: this.getHeaders(),
+        ...this.getRequestOptions(),
       }
     );
 
@@ -263,6 +301,7 @@ export class A2AClient {
     const response = await fetch(`${this.baseUrl}/api/v1/agents/${agentId}/heartbeat`, {
       method: 'POST',
       headers: this.getHeaders(),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -284,6 +323,7 @@ export class A2AClient {
       method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify({ status }),
+      ...this.getRequestOptions(),
     });
 
     if (!response.ok) {
@@ -294,4 +334,3 @@ export class A2AClient {
     return response.json();
   }
 }
-

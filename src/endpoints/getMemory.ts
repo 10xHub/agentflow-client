@@ -1,13 +1,9 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 import { MemoryResult } from './searchMemory.js';
 
-export interface GetMemoryContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface GetMemoryContext extends RequestContext {}
 
 export interface GetMemoryRequest {
     memoryId: string;
@@ -46,10 +42,10 @@ export async function getMemory(
 
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             body: JSON.stringify(body),
             signal: controller.signal
         });

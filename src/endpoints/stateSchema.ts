@@ -1,12 +1,8 @@
 import { ResponseMetadata } from './metadata.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface StateSchemaContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface StateSchemaContext extends RequestContext {}
 
 /**
  * JSON Schema definition for a field in AgentState
@@ -66,11 +62,11 @@ export async function stateSchema(context: StateSchemaContext): Promise<StateSch
 
         const response = await fetch(`${context.baseUrl}/v1/graph:StateSchema`, {
             method: 'GET',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             signal: controller.signal
         });
 

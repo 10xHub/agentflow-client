@@ -1,13 +1,9 @@
 import { ResponseMetadata } from './metadata.js';
 import { Message } from '../message.js';
 import { createErrorFromResponse } from '../errors.js';
+import { buildHeaders, getRequestCredentials, RequestContext } from '../request.js';
 
-export interface ThreadMessageContext {
-    baseUrl: string;
-    authToken?: string | null;
-    timeout: number;
-    debug: boolean;
-}
+export interface ThreadMessageContext extends RequestContext {}
 
 export interface ThreadMessageRequest {
     threadId: string | number;
@@ -44,10 +40,10 @@ export async function threadMessage(
 
         const response = await fetch(url, {
             method: 'GET',
-            headers: {
+            headers: buildHeaders(context as RequestContext, {
                 'Content-Type': 'application/json',
-                ...(context.authToken && { 'Authorization': `Bearer ${context.authToken}` })
-            },
+            }),
+            ...getRequestCredentials(context as RequestContext),
             signal: controller.signal
         });
 

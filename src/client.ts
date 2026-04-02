@@ -101,10 +101,14 @@ import {
     FileInfoResponse,
     MultimodalConfigResponse
 } from './endpoints/files.js';
+import { AgentFlowAuth, RequestContext } from './request.js';
 
 export interface AgentFlowConfig {
     baseUrl: string;
     authToken?: string | null;
+    auth?: AgentFlowAuth | null;
+    headers?: HeadersInit;
+    credentials?: RequestCredentials;
     timeout?: number; // default 5min
     debug?: boolean;
 }
@@ -112,6 +116,9 @@ export interface AgentFlowConfig {
 export class AgentFlowClient {
     private baseUrl: string;
     private authToken?: string | null;
+    private auth?: AgentFlowAuth | null;
+    private headers?: HeadersInit;
+    private credentials?: RequestCredentials;
     private timeout: number;
     private debug: boolean;
     private toolExecutor: ToolExecutor;
@@ -120,10 +127,25 @@ export class AgentFlowClient {
     constructor(config: AgentFlowConfig) {
         this.baseUrl = config.baseUrl;
         this.authToken = config.authToken;
+        this.auth = config.auth;
+        this.headers = config.headers;
+        this.credentials = config.credentials;
         this.timeout = config.timeout || 300000; // 5 min
         this.debug = config.debug || false;
         this.toolExecutor = new ToolExecutor([]);
         this.toolRegistrations = [];
+    }
+
+    private createContext<T extends RequestContext>(): T {
+        return {
+            baseUrl: this.baseUrl,
+            authToken: this.authToken,
+            auth: this.auth,
+            headers: this.headers,
+            credentials: this.credentials,
+            timeout: this.timeout,
+            debug: this.debug
+        } as T;
     }
 
     /**
@@ -156,12 +178,7 @@ export class AgentFlowClient {
             parameters: reg.parameters || {}
         }));
 
-        const context: SetupGraphContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<SetupGraphContext>();
 
         const request: SetupGraphRequest = {
             tools: remoteTools
@@ -175,12 +192,7 @@ export class AgentFlowClient {
      * Ping the server to check connectivity
      */
     async ping(): Promise<PingResponse> {
-        const context: PingContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<PingContext>();
 
         return ping(context);
     }
@@ -189,12 +201,7 @@ export class AgentFlowClient {
      * Fetch the agent graph 
      */
     async graph(): Promise<GraphResponse> {
-        const context: GraphContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<GraphContext>();
 
         return graph(context);
     }
@@ -206,12 +213,7 @@ export class AgentFlowClient {
      * @returns StopGraphResponse with the stop operation result
      */
     async stopGraph(threadId: string, config?: Record<string, any>): Promise<StopGraphResponse> {
-        const context: StopGraphContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<StopGraphContext>();
 
         const request: StopGraphRequest = {
             thread_id: threadId,
@@ -231,12 +233,7 @@ export class AgentFlowClient {
      * @returns FixGraphResponse with the fix operation result including removed_count
      */
     async fixGraph(threadId: string, config?: Record<string, any>): Promise<FixGraphResponse> {
-        const context: FixGraphContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<FixGraphContext>();
 
         const request: FixGraphRequest = {
             thread_id: threadId,
@@ -253,12 +250,7 @@ export class AgentFlowClient {
      * Fetch the state schema of the agent
      */
     async graphStateSchema(): Promise<StateSchemaResponse> {
-        const context: StateSchemaContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<StateSchemaContext>();
 
         return stateSchema(context);
     }
@@ -273,12 +265,7 @@ export class AgentFlowClient {
      * @returns ThreadStateResponse containing the thread's current state
      */
     async threadState(threadId: number): Promise<ThreadStateResponse> {
-        const context: ThreadStateContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ThreadStateContext>();
 
         return threadState(context, threadId);
     }
@@ -295,12 +282,7 @@ export class AgentFlowClient {
         config: Record<string, any>,
         state: any // AgentState
     ): Promise<UpdateThreadStateResponse> {
-        const context: UpdateThreadStateContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<UpdateThreadStateContext>();
 
         const request: UpdateThreadStateRequest = {
             config,
@@ -316,12 +298,7 @@ export class AgentFlowClient {
      * @returns ClearThreadStateResponse with the clear operation result
      */
     async clearThreadState(threadId: number): Promise<ClearThreadStateResponse> {
-        const context: ClearThreadStateContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ClearThreadStateContext>();
 
         return clearThreadState(context, threadId);
     }
@@ -332,12 +309,7 @@ export class AgentFlowClient {
      * @returns ThreadDetailsResponse containing thread details
      */
     async threadDetails(threadId: string | number): Promise<ThreadDetailsResponse> {
-        const context: ThreadDetailsContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ThreadDetailsContext>();
 
         return threadDetails(context, threadId);
     }
@@ -354,12 +326,7 @@ export class AgentFlowClient {
         offset?: number,
         limit?: number
     ): Promise<ThreadsResponse> {
-        const context: ThreadsContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ThreadsContext>();
 
         const request: ThreadsRequest = {
             search,
@@ -384,12 +351,7 @@ export class AgentFlowClient {
         offset?: number,
         limit?: number
     ): Promise<ThreadMessagesResponse> {
-        const context: ThreadMessagesContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ThreadMessagesContext>();
 
         const request: ThreadMessagesRequest = {
             threadId,
@@ -415,12 +377,7 @@ export class AgentFlowClient {
         config: Record<string, any> = {},
         metadata?: Record<string, any>
     ): Promise<AddThreadMessagesResponse> {
-        const context: AddThreadMessagesContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<AddThreadMessagesContext>();
 
         const request: AddThreadMessagesRequest = {
             threadId,
@@ -442,12 +399,7 @@ export class AgentFlowClient {
         threadId: string | number,
         messageId: string
     ): Promise<ThreadMessageResponse> {
-        const context: ThreadMessageContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ThreadMessageContext>();
 
         const request: ThreadMessageRequest = {
             threadId,
@@ -469,12 +421,7 @@ export class AgentFlowClient {
         messageId: string,
         config?: Record<string, any>
     ): Promise<DeleteThreadMessageResponse> {
-        const context: DeleteThreadMessageContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<DeleteThreadMessageContext>();
 
         const request: DeleteThreadMessageRequest = {
             threadId,
@@ -495,12 +442,7 @@ export class AgentFlowClient {
         threadId: string | number,
         config?: Record<string, any>
     ): Promise<DeleteThreadResponse> {
-        const context: DeleteThreadContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<DeleteThreadContext>();
 
         const request: DeleteThreadRequest = {
             threadId,
@@ -527,10 +469,7 @@ export class AgentFlowClient {
         }
     ): Promise<InvokeResult> {
         const context: InvokeContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
+            ...this.createContext<InvokeContext>(),
             toolExecutor: this.toolExecutor
         };
 
@@ -581,10 +520,7 @@ export class AgentFlowClient {
         }
     ): AsyncGenerator<StreamChunk, void, unknown> {
         const context: StreamContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
+            ...this.createContext<StreamContext>(),
             toolExecutor: this.toolExecutor
         };
 
@@ -619,12 +555,7 @@ export class AgentFlowClient {
      * ```
      */
     async storeMemory(request: StoreMemoryRequest): Promise<StoreMemoryResponse> {
-        const context: StoreMemoryContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<StoreMemoryContext>();
 
         return storeMemoryEndpoint(context, request);
     }
@@ -649,12 +580,7 @@ export class AgentFlowClient {
      * ```
      */
     async searchMemory(request: SearchMemoryRequest): Promise<SearchMemoryResponse> {
-        const context: SearchMemoryContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<SearchMemoryContext>();
 
         return searchMemoryEndpoint(context, request);
     }
@@ -679,12 +605,7 @@ export class AgentFlowClient {
         memoryId: string,
         options?: { config?: Record<string, any>; options?: Record<string, any> }
     ): Promise<GetMemoryResponse> {
-        const context: GetMemoryContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<GetMemoryContext>();
 
         const request: GetMemoryRequest = {
             memoryId,
@@ -716,12 +637,7 @@ export class AgentFlowClient {
         content: string,
         options?: { config?: Record<string, any>; options?: Record<string, any>; metadata?: Record<string, any> }
     ): Promise<UpdateMemoryResponse> {
-        const context: UpdateMemoryContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<UpdateMemoryContext>();
 
         const request: UpdateMemoryRequest = {
             memoryId,
@@ -754,12 +670,7 @@ export class AgentFlowClient {
         memoryId: string,
         options?: { config?: Record<string, any>; options?: Record<string, any> }
     ): Promise<DeleteMemoryResponse> {
-        const context: DeleteMemoryContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<DeleteMemoryContext>();
 
         const request: DeleteMemoryRequest = {
             memoryId,
@@ -791,12 +702,7 @@ export class AgentFlowClient {
     async listMemories(
         options?: { config?: Record<string, any>; options?: Record<string, any>; limit?: number }
     ): Promise<ListMemoriesResponse> {
-        const context: ListMemoriesContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ListMemoriesContext>();
 
         const request: ListMemoriesRequest = {
             config: options?.config,
@@ -833,12 +739,7 @@ export class AgentFlowClient {
             filters?: Record<string, any>;
         }
     ): Promise<ForgetMemoriesResponse> {
-        const context: ForgetMemoriesContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug
-        };
+        const context = this.createContext<ForgetMemoriesContext>();
 
         const request: ForgetMemoriesRequest = {
             config: options?.config,
@@ -871,12 +772,7 @@ export class AgentFlowClient {
     async uploadFile(
         file: File | Blob | { data: Blob; filename: string }
     ): Promise<FileUploadResponse> {
-        const context: FileUploadContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
-        };
+        const context = this.createContext<FileUploadContext>();
         return uploadFileEndpoint(context, file);
     }
 
@@ -884,12 +780,7 @@ export class AgentFlowClient {
      * Download a file by its file_id. Returns raw Blob.
      */
     async getFile(fileId: string): Promise<Blob> {
-        const context: FileUploadContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
-        };
+        const context = this.createContext<FileUploadContext>();
         return getFileEndpoint(context, fileId);
     }
 
@@ -897,12 +788,7 @@ export class AgentFlowClient {
      * Get metadata about a stored file.
      */
     async getFileInfo(fileId: string): Promise<FileInfoResponse> {
-        const context: FileUploadContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
-        };
+        const context = this.createContext<FileUploadContext>();
         return getFileInfoEndpoint(context, fileId);
     }
 
@@ -912,12 +798,7 @@ export class AgentFlowClient {
      * For local or memory-backed media this may fall back to the API file route.
      */
     async getFileAccessUrl(fileId: string): Promise<FileAccessUrlResponse> {
-        const context: FileUploadContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
-        };
+        const context = this.createContext<FileUploadContext>();
         return getFileAccessUrlEndpoint(context, fileId);
     }
 
@@ -925,12 +806,7 @@ export class AgentFlowClient {
      * Get the current multimodal configuration from the server.
      */
     async getMultimodalConfig(): Promise<MultimodalConfigResponse> {
-        const context: FileUploadContext = {
-            baseUrl: this.baseUrl,
-            authToken: this.authToken,
-            timeout: this.timeout,
-            debug: this.debug,
-        };
+        const context = this.createContext<FileUploadContext>();
         return getMultimodalConfigEndpoint(context);
     }
 
