@@ -113,6 +113,61 @@ export interface AgentFlowConfig {
     debug?: boolean;
 }
 
+function isThreadsRequest(
+    value?: string | ThreadsRequest
+): value is ThreadsRequest {
+    return typeof value === 'object' && value !== null;
+}
+
+function normalizeThreadsRequest(
+    value?: string | ThreadsRequest,
+    offset?: number,
+    limit?: number
+): ThreadsRequest {
+    if (isThreadsRequest(value)) {
+        return {
+            search: value.search,
+            offset: value.offset,
+            limit: value.limit
+        };
+    }
+
+    return {
+        search: value,
+        offset,
+        limit
+    };
+}
+
+function isThreadMessagesRequest(
+    value?: string | Omit<ThreadMessagesRequest, 'threadId'>
+): value is Omit<ThreadMessagesRequest, 'threadId'> {
+    return typeof value === 'object' && value !== null;
+}
+
+function normalizeThreadMessagesRequest(
+    threadId: string | number,
+    value?: string | Omit<ThreadMessagesRequest, 'threadId'>,
+    offset?: number,
+    limit?: number
+): ThreadMessagesRequest {
+    if (isThreadMessagesRequest(value)) {
+        return {
+            threadId,
+            search: value.search,
+            offset: value.offset,
+            limit: value.limit
+        };
+    }
+
+    return {
+        threadId,
+        search: value,
+        offset,
+        limit
+    };
+}
+
 export class AgentFlowClient {
     private baseUrl: string;
     private authToken?: string | null;
@@ -321,18 +376,15 @@ export class AgentFlowClient {
      * @param limit - Optional limit for pagination (default no limit)
      * @returns ThreadsResponse containing the list of threads and metadata
      */
+    async threads(): Promise<ThreadsResponse>;
+    async threads(request: ThreadsRequest): Promise<ThreadsResponse>;
     async threads(
-        search?: string,
+        search?: string | ThreadsRequest,
         offset?: number,
         limit?: number
     ): Promise<ThreadsResponse> {
         const context = this.createContext<ThreadsContext>();
-
-        const request: ThreadsRequest = {
-            search,
-            offset,
-            limit
-        };
+        const request = normalizeThreadsRequest(search, offset, limit);
 
         return threads(context, request);
     }
@@ -347,18 +399,21 @@ export class AgentFlowClient {
      */
     async threadMessages(
         threadId: string | number,
-        search?: string,
+        request: Omit<ThreadMessagesRequest, 'threadId'>
+    ): Promise<ThreadMessagesResponse>;
+    async threadMessages(
+        threadId: string | number,
+        search?: string | Omit<ThreadMessagesRequest, 'threadId'>,
         offset?: number,
         limit?: number
     ): Promise<ThreadMessagesResponse> {
         const context = this.createContext<ThreadMessagesContext>();
-
-        const request: ThreadMessagesRequest = {
+        const request = normalizeThreadMessagesRequest(
             threadId,
             search,
             offset,
             limit
-        };
+        );
 
         return threadMessages(context, request);
     }
