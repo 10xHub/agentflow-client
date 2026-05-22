@@ -29,6 +29,10 @@ import {
     StreamEventType
 } from './endpoints/stream.js';
 import {
+    wsStreamInvoke,
+    WsStreamContext,
+} from './endpoints/wsStream.js';
+import {
     storeMemory as storeMemoryEndpoint,
     StoreMemoryContext,
     StoreMemoryRequest,
@@ -590,6 +594,67 @@ export class AgentFlowClient {
 
         // Return async generator from the stream endpoint
         return streamInvokeEndpoint(context, request);
+    }
+
+    /**
+     * Stream invoke via a persistent WebSocket connection.
+     *
+     * Identical API to ``stream()`` — same message types, same chunk format,
+     * same tool-execution loop — but uses a single WebSocket instead of one
+     * HTTP request per tool-call iteration.  Switch from ``stream()`` to
+     * ``wsStream()`` by changing one method name; everything else stays the
+     * same.
+     *
+     * The WebSocket stays open for the full lifecycle of the call (fresh run +
+     * any resume runs triggered by remote tool calls).  The server sends a
+     * ``{ event:"updates", data:{ status:"done" } }`` chunk after each run so
+     * the client knows when to send the next resume request.
+     *
+     * Auth: the bearer token is passed as a ``?token=`` query parameter so
+     * that browser environments (which cannot set custom WebSocket headers) are
+     * supported out of the box.
+     *
+     * @param messages - Array of messages to send
+     * @param options - Same options as ``stream()``
+     * @returns AsyncGenerator of StreamChunk objects
+     *
+     * @example
+     * ```ts
+     * const stream = client.wsStream([userMessage], {
+     *   config: { thread_id: 'my-thread' },
+     *   response_granularity: 'low',
+     * });
+     *
+     * for await (const chunk of stream) {
+     *   if (chunk.event === 'message') {
+     *     console.log('Message:', chunk.message?.content);
+     *   }
+     * }
+     * ```
+     */
+    wsStream(
+        messages: Message[],
+        options?: {
+            initial_state?: Record<string, any>;
+            config?: Record<string, any>;
+            recursion_limit?: number;
+            response_granularity?: 'full' | 'partial' | 'low';
+        }
+    ): AsyncGenerator<StreamChunk, void, unknown> {
+        const context: WsStreamContext = {
+            ...this.createContext<WsStreamContext>(),
+            toolExecutor: this.toolExecutor,
+        };
+
+        const request: StreamRequest = {
+            messages: messages.map((msg) => this.serializeMessage(msg)),
+            initial_state: options?.initial_state,
+            config: options?.config,
+            recursion_limit: options?.recursion_limit ?? 25,
+            response_granularity: options?.response_granularity ?? 'low',
+        };
+
+        return wsStreamInvoke(context, request);
     }
 
     /**
