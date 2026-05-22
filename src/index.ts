@@ -60,6 +60,9 @@ export * from './endpoints/invoke.js';
 // Export stream types
 export * from './endpoints/stream.js';
 
+// Export WebSocket stream types
+export * from './endpoints/wsStream.js';
+
 // Export store memory types
 export * from './endpoints/storeMemory.js';
 
