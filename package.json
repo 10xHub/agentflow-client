@@ -1,6 +1,6 @@
 {
   "name": "@10xscale/agentflow-client",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "TypeScript client library for AgentFlow API - build intelligent agents with thread management, streaming, memory, and tool execution",
   "type": "module",
   "main": "dist/index.js",
