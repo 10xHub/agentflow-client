@@ -17,9 +17,7 @@ export default defineConfig({
         '**/*.config.ts',
         '**/examples/**',
         '**/docs/**',
-        'check.ts',
-        'src/a2ui/**',
-        'src/endpoints/a2a.ts'
+        'check.ts'
       ],
       include: ['src/**/*.ts'],
       all: true,

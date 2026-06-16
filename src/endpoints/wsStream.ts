@@ -1,6 +1,7 @@
 import { Message } from '../message.js';
 import { ToolExecutor } from '../tools.js';
-import { buildHeaders, RequestContext } from '../request.js';
+import { RequestContext } from '../request.js';
+import { buildWsUrl, openWebSocket } from '../ws.js';
 import { StreamChunk, StreamEventType, StreamRequest, serializeMessage } from './stream.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -48,68 +49,6 @@ function hasRemoteToolCalls(messages: Message[]): boolean {
     );
 }
 
-/**
- * Convert the HTTP base URL to a WebSocket URL and append the graph WS path.
- *
- * Auth strategy
- * ─────────────
- * Browser WebSocket API cannot set custom headers, so the bearer token is
- * appended as a ``?token=`` query parameter.  The server's RequirePermission
- * dependency falls back to this parameter when no Authorization header is
- * present (added in the companion server PR).
- *
- * In non-browser environments (Node.js + ws / undici) that DO support custom
- * WS headers the caller can additionally pass the Authorization header via
- * the options object — but the query param path always works as a fallback.
- */
-function buildWsUrl(context: WsStreamContext): string {
-    const base =
-        context.baseUrl
-            .replace(/^https:/, 'wss:')
-            .replace(/^http:/, 'ws:')
-            .replace(/\/$/, '') + '/v1/graph/ws';
-
-    // Resolve the bearer token from the context (same priority as buildHeaders)
-    let token: string | null = null;
-    if (context.authToken) {
-        token = context.authToken;
-    } else if (context.auth?.type === 'bearer') {
-        token = context.auth.token;
-    }
-
-    if (token) {
-        return `${base}?token=${encodeURIComponent(token)}`;
-    }
-    return base;
-}
-
-/**
- * Open a WebSocket to the given URL.
- *
- * On Node.js runtimes that accept additional options in the `WebSocket`
- * constructor (e.g. `ws`, `undici`) we also attempt to pass the Authorization
- * header directly so the token is not exposed in the URL.  If the constructor
- * does not accept options the plain URL is used.
- */
-function openWebSocket(url: string, context: WsStreamContext): WebSocket {
-    const allHeaders = buildHeaders(context) as Record<string, string>;
-    const authHeader = allHeaders['Authorization'] || allHeaders['authorization'];
-
-    if (authHeader) {
-        try {
-            // Node.js WebSocket implementations (ws, undici) accept a third
-            // `options` argument.  This cast is intentional — the browser's
-            // WebSocket constructor ignores unknown arguments silently.
-            // @ts-ignore
-            return new WebSocket(url, undefined, { headers: { Authorization: authHeader } });
-        } catch {
-            // Fall through to plain constructor
-        }
-    }
-
-    return new WebSocket(url);
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Core implementation
 // ─────────────────────────────────────────────────────────────────────────────
@@ -119,7 +58,7 @@ function openWebSocket(url: string, context: WsStreamContext): WebSocket {
  *
  * The protocol is:
  *
- *   1. Connect to ``/v1/graph/ws`` (auth via ``?token=`` or Authorization header).
+ *   1. Connect to ``/v1/graph/ws`` (auth via the ``agentflow-bearer`` subprotocol or Authorization header).
  *   2. Send ``{ invoke_type:"fresh", messages:[…], config:{…}, … }``.
  *   3. Receive ``StreamChunk`` JSON messages; yield each to the caller.
  *   4. Server sends ``{ event:"updates", data:{ status:"done" } }`` after each run.
@@ -143,10 +82,10 @@ export async function* wsStreamInvoke(
     context: WsStreamContext,
     request: StreamRequest
 ): AsyncGenerator<StreamChunk, void, unknown> {
-    const url = buildWsUrl(context);
+    const url = buildWsUrl(context, '/v1/graph/ws');
 
     if (context.debug) {
-        console.debug('AgentFlowClient [WS]: connecting to', url.replace(/[?&]token=[^&]*/g, '?token=***'));
+        console.debug('AgentFlowClient [WS]: connecting to', url);
     }
 
     const ws = openWebSocket(url, context);
@@ -199,7 +138,9 @@ export async function* wsStreamInvoke(
 
     // Wait for the connection to open (or fail)
     await new Promise<void>((resolve, reject) => {
-        if (ws.readyState === WebSocket.OPEN) {
+        // Numeric readyState literals (OPEN===1) instead of WebSocket.OPEN: the
+        // global WebSocket may be absent on Node < 21 when a custom impl is injected.
+        if (ws.readyState === 1) {
             resolve();
             return;
         }
@@ -308,7 +249,9 @@ export async function* wsStreamInvoke(
             }
         }
     } finally {
-        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+        // CONNECTING===0, OPEN===1 (numeric literals; the global WebSocket may be
+        // absent on Node < 21 when a custom impl is injected).
+        if (ws.readyState === 1 || ws.readyState === 0) {
             ws.close(1000);
         }
 

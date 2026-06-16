@@ -9,14 +9,6 @@ export default defineConfig({
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`
     },
-    rollupOptions: {
-      external: ['react'],
-      output: {
-        globals: {
-          react: 'React'
-        }
-      }
-    },
     outDir: 'dist',
     sourcemap: true
   }

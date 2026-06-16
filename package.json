@@ -1,10 +1,20 @@
 {
   "name": "@10xscale/agentflow-client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TypeScript client library for AgentFlow API - build intelligent agents with thread management, streaming, memory, and tool execution",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "files": [
     "dist",
     "README.md",
@@ -23,15 +33,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Iamsdt/agentflow-client.git"
+    "url": "git+https://github.com/10xHub/agentflow.git",
+    "directory": "agentflow-client"
   },
   "bugs": {
-    "url": "https://github.com/Iamsdt/agentflow-client/issues"
+    "url": "https://github.com/10xHub/agentflow/issues"
   },
-  "homepage": "https://github.com/Iamsdt/agentflow-client#readme",
+  "homepage": "https://github.com/10xHub/agentflow/tree/main/agentflow-client#readme",
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@vitejs/plugin-react": "^4.2.0",
     "@vitest/coverage-v8": "^1.6.1",
     "@vitest/ui": "^1.0.0",
     "ts-node": "^10.9.2",
@@ -51,7 +60,6 @@
     "streaming",
     "tools",
     "function-calling",
-    "react",
     "typescript",
     "api-client"
   ],

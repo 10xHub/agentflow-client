@@ -2,10 +2,9 @@
 
 [![npm version](https://img.shields.io/npm/v/@10xscale/agentflow-client.svg)](https://www.npmjs.com/package/@10xscale/agentflow-client)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.0+-blue.svg)](https://reactjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A TypeScript/React client library for the **AgentFlow** multi-agent system API. Build conversational AI applications with streaming responses, tool execution, and dynamic state management.
+A TypeScript client library for the **AgentFlow** multi-agent system API. Build conversational AI applications with streaming responses, realtime audio, tool execution, and dynamic state management.
 
 
 
@@ -15,7 +14,7 @@ A TypeScript/React client library for the **AgentFlow** multi-agent system API. 
 - 💬 **Streaming Support** - Real-time streaming responses for chat UIs
 - 🔧 **Tool Execution** - Automatic local tool execution with recursion handling
 - 📊 **State Management** - Dynamic state schema with validation
-- ⚛️ **React Ready** - Built for React applications with hooks and patterns
+- 🎙️ **Realtime Audio** - WebSocket audio-to-audio via `/v1/graph/live`
 - 📘 **TypeScript First** - Full TypeScript support with comprehensive types
 - 🎯 **Zero Config** - Works out of the box with sensible defaults
 
@@ -96,32 +95,37 @@ for await (const chunk of stream) {
 }
 ```
 
-### React Integration
+## Realtime audio (`/v1/graph/live`)
 
-```typescript
-import { useState } from 'react';
-import { AgentFlowClient, Message } from '@10xscale/agentflow-client';
+Transport-only: you stream PCM16 in and get PCM16 out. Mic capture and playback are yours to wire.
 
-function ChatComponent() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+```ts
+import { AgentFlowClient } from '@10xscale/agentflow-client';
 
-  const sendMessage = async (text: string) => {
-    const userMsg = Message.text_message(text, 'user');
-    setMessages(prev => [...prev, userMsg]);
+const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000', authToken });
 
-    const result = await client.invoke([...messages, userMsg]);
-    setMessages(result.messages);
-  };
+const session = client.realtime(
+  { model: 'gemini-2.5-flash-live', modalities: 'AUDIO' },
+  { reconnect: { maxAttempts: 5 } }
+);
 
-  return (
-    <div>
-      {messages.map((msg, i) => (
-        <div key={i}>{msg.content}</div>
-      ))}
-    </div>
-  );
-}
+session.on('audio', (pcm16, sampleRate) => playback(pcm16, sampleRate)); // PCM16 @ 24 kHz
+session.on('output_transcript', (e) => console.log(e.text));
+session.on('tool_call', (e) => console.log('tool', e.name, e.args));
+session.on('error', (e) => console.error(e.message));
+
+await session.ready;            // socket open + init sent
+session.sendAudio(micChunk);    // PCM16 @ 16 kHz (Uint8Array | ArrayBuffer)
+// push-to-talk: session.activityStart() / session.activityEnd()
+session.close();                // graceful end; disables reconnect
+```
+
+Auth uses the browser-safe `agentflow-bearer` subprotocol automatically. In Node < 21 (no global
+`WebSocket`), pass an implementation:
+
+```ts
+import WebSocket from 'ws';
+const client = new AgentFlowClient({ baseUrl, authToken, webSocketImpl: WebSocket });
 ```
 
 ### File Uploads And Access URLs
@@ -185,10 +189,6 @@ const result = await client.invoke([
 - **[State Schema](docs/state-schema-guide.md)** - Dynamic state management and validation
 - **[Tools Guide](docs/tools-guide.md)** - Tool registration and execution ⚠️ **Important: Remote vs Backend tools**
 
-### React Integration
-- **[React Integration Guide](docs/react-integration.md)** - Hooks and patterns for React
-- **[React Examples](docs/react-examples.md)** - Complete component examples
-
 ### Reference
 - **[Quick References](docs/)** - Quick refs for stream and state schema APIs
 - **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
@@ -237,14 +237,12 @@ Check out the [`examples/`](examples/) directory for complete working examples:
 - **[invoke-example.ts](examples/invoke-example.ts)** - Basic invoke with tool execution
 - **[stream-example.ts](examples/stream-example.ts)** - Streaming responses
 - **[state-schema-examples.ts](examples/state-schema-examples.ts)** - Form generation and validation
-- **[react-chat-component.tsx](examples/react-chat-component.tsx)** - React chat UI
-- **[react-form-builder.tsx](examples/react-form-builder.tsx)** - Dynamic form builder
 
 ## 🏗️ Architecture
 
 ```
 ┌─────────────────────┐
-│   Your React App    │
+│   Your Application  │
 └──────────┬──────────┘
            │
            │ AgentFlowClient
@@ -256,7 +254,7 @@ Check out the [`examples/`](examples/) directory for complete working examples:
 │  - Messages         │
 └──────────┬──────────┘
            │
-           │ HTTP/HTTPS
+           │ HTTP/HTTPS + WebSocket
            ▼
 ┌─────────────────────┐
 │  AgentFlow Server   │  ← Your backend
@@ -274,9 +272,15 @@ const client = new AgentFlowClient({
   headers?: HeadersInit,     // Optional: extra headers for every request
   credentials?: RequestCredentials, // Optional: cookie/session auth
   timeout?: number,          // Optional: Request timeout (default: 5min)
-  debug?: boolean            // Optional: Enable debug logging
+  debug?: boolean,           // Optional: Enable debug logging
+  webSocketImpl?: typeof WebSocket  // Node < 21 (pass the 'ws' package)
 });
 ```
+
+## Module formats
+
+Ships dual ESM + CJS with types. `import` resolves `dist/index.js` (ESM); `require` resolves
+`dist/index.cjs`. Tree-shakeable (`"sideEffects": false`).
 
 ## 🧪 Testing
 

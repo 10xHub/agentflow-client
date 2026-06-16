@@ -33,6 +33,13 @@ import {
     WsStreamContext,
 } from './endpoints/wsStream.js';
 import {
+    RealtimeSession,
+    RealtimeInit,
+    RealtimeOptions,
+    RealtimeContext,
+} from './endpoints/realtime.js';
+import type { WebSocketImpl } from './ws.js';
+import {
     storeMemory as storeMemoryEndpoint,
     StoreMemoryContext,
     StoreMemoryRequest,
@@ -115,6 +122,7 @@ export interface AgentFlowConfig {
     credentials?: RequestCredentials;
     timeout?: number; // default 5min
     debug?: boolean;
+    webSocketImpl?: WebSocketImpl;
 }
 
 function isThreadsRequest(
@@ -180,6 +188,7 @@ export class AgentFlowClient {
     private credentials?: RequestCredentials;
     private timeout: number;
     private debug: boolean;
+    private webSocketImpl?: WebSocketImpl;
     private toolExecutor: ToolExecutor;
     private toolRegistrations: ToolRegistration[];
 
@@ -191,6 +200,7 @@ export class AgentFlowClient {
         this.credentials = config.credentials;
         this.timeout = config.timeout || 300000; // 5 min
         this.debug = config.debug || false;
+        this.webSocketImpl = config.webSocketImpl;
         this.toolExecutor = new ToolExecutor([]);
         this.toolRegistrations = [];
     }
@@ -203,7 +213,8 @@ export class AgentFlowClient {
             headers: this.headers,
             credentials: this.credentials,
             timeout: this.timeout,
-            debug: this.debug
+            debug: this.debug,
+            webSocketImpl: this.webSocketImpl,
         } as T;
     }
 
@@ -610,9 +621,9 @@ export class AgentFlowClient {
      * ``{ event:"updates", data:{ status:"done" } }`` chunk after each run so
      * the client knows when to send the next resume request.
      *
-     * Auth: the bearer token is passed as a ``?token=`` query parameter so
-     * that browser environments (which cannot set custom WebSocket headers) are
-     * supported out of the box.
+     * Auth: the bearer token is sent via the ``agentflow-bearer`` WebSocket
+     * subprotocol (browser-safe; never placed in the URL), with the Authorization
+     * header also set on Node runtimes.
      *
      * @param messages - Array of messages to send
      * @param options - Same options as ``stream()``
@@ -655,6 +666,28 @@ export class AgentFlowClient {
         };
 
         return wsStreamInvoke(context, request);
+    }
+
+    /**
+     * Open a realtime (audio-to-audio) session over ``/v1/graph/live``.
+     *
+     * Transport-only: send PCM16 input via ``session.sendAudio(...)`` and receive
+     * PCM16 output via ``session.on('audio', ...)``. Mic capture and audio playback
+     * are the caller's responsibility. The session auto-reconnects (with backoff)
+     * on an unexpected drop and resumes the same ``thread_id``.
+     *
+     * @example
+     * ```ts
+     * const session = client.realtime({ model: 'gemini-2.5-flash-live' });
+     * session.on('audio', (pcm) => speaker.write(pcm));
+     * session.on('output_transcript', (e) => console.log(e.text));
+     * await session.ready;
+     * session.sendAudio(micChunk);
+     * ```
+     */
+    realtime(init: RealtimeInit, options?: RealtimeOptions): RealtimeSession {
+        const context = this.createContext<RealtimeContext>();
+        return new RealtimeSession(context, init, options);
     }
 
     /**

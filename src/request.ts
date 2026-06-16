@@ -1,3 +1,5 @@
+import type { WebSocketImpl } from './ws.js';
+
 export interface AgentFlowBearerAuth {
   type: 'bearer';
   token: string;
@@ -29,6 +31,7 @@ export interface RequestContext {
   credentials?: RequestCredentials;
   timeout: number;
   debug: boolean;
+  webSocketImpl?: WebSocketImpl;
 }
 
 function setHeader(

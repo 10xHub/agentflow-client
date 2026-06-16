@@ -63,6 +63,12 @@ export * from './endpoints/stream.js';
 // Export WebSocket stream types
 export * from './endpoints/wsStream.js';
 
+// Export shared WebSocket helpers
+export * from './ws.js';
+
+// Export realtime (audio) session types + class
+export * from './endpoints/realtime.js';
+
 // Export store memory types
 export * from './endpoints/storeMemory.js';
 
