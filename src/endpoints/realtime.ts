@@ -21,14 +21,18 @@ export interface RealtimeVADConfig {
 }
 
 export interface RealtimeInit {
-  /** Required, e.g. "gemini-2.5-flash-live". */
-  model: string;
+  /**
+   * e.g. "gemini-2.5-flash-live". Honoured only when the server lists it in
+   * `websocket.realtime_models`; otherwise the agent's own model is used.
+   */
+  model?: string;
   /** Omit to let the session generate one (used for resume). */
   thread_id?: string;
   voice?: string;
   modalities?: ResponseModality | ResponseModality[];
   vad?: RealtimeVADConfig;
   system_prompt?: string;
+  /** Can only narrow the agent's own tag filter. */
   tools_tags?: string[];
   /** Forward-compatible passthrough; unknown keys are ignored by the server. */
   [k: string]: unknown;

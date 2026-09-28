@@ -155,56 +155,33 @@ const msg = Message.withFile('Summarize this document', upload.data.file_id, upl
 **⚠️ Important:** Remote tools (registered client-side) should **only** be used for browser-level APIs like `localStorage`, `navigator.geolocation`, etc. For most operations (database queries, external API calls, calculations), define your tools in the Python backend instead. See [How to register remote tools](https://agentflow.10xscale.ai/docs/how-to/client/register-remote-tools) for details.
 
 ```typescript
-// Register custom tools for agent execution (ONLY for browser APIs)
-client.registerTool({
-  node: 'assistant',
-  name: 'get_weather',
-  description: 'Get current weather for a location',
-  parameters: {
-    type: 'object',
-    properties: {
-      location: { type: 'string' },
-    },
-    required: ['location'],
-  },
-  handler: async ({ location }) => {
-    // Your tool logic here
-    return { temperature: 72, conditions: 'sunny' };
-  },
+// Matching trusted schema must be declared in the server's agentflow.json.
+client.registerToolHandler('get_weather', async ({ location }) => {
+  return { temperature: 72, conditions: 'sunny' };
 });
 
 // Tools execute automatically during invoke
 const result = await client.invoke([Message.text_message('What is the weather in NYC?', 'user')]);
 ```
 
-`parameters` is a plain JSON Schema, and `properties` / `required` are both optional. A tool whose
-arguments are all optional needs no `required`, and a tool that takes no arguments needs neither:
+Declare model-facing metadata on the server, never from an untrusted client:
 
-```typescript
-client.registerTool({
-  node: 'assistant',
-  name: 'read_terminal',
-  description: 'Read recent terminal output',
-  parameters: {
-    type: 'object',
-    properties: {
-      last_chars: { type: 'integer', description: 'Defaults to 2000' },
-    },
-  },
-  handler: async ({ last_chars = 2000 }) => readTerminal(last_chars),
-});
-
-client.registerTool({
-  node: 'assistant',
-  name: 'read_diff',
-  description: 'Read the current diff',
-  parameters: { type: 'object' }, // or omit `parameters` entirely
-  handler: async () => getDiff(),
-});
+```json
+{
+  "remote_tools": [{
+    "node": "assistant",
+    "name": "get_weather",
+    "description": "Get current weather for a location",
+    "parameters": {
+      "type": "object",
+      "properties": {"location": {"type": "string"}},
+      "required": ["location"]
+    }
+  }]
+}
 ```
 
-The missing keywords are filled in (`properties: {}`, `required: []`) when the tool definition is
-sent to the server, so the schema the model sees is always complete.
+No client setup call is required or available.
 
 ## 📚 Documentation
 
@@ -286,12 +263,8 @@ const specific = await client.observability(threadId, runId);
 Register local tools that agents can execute:
 
 ```typescript
-client.registerTool({
-  node: 'node_name',
-  name: 'tool_name',
-  handler: async (args) => {
-    /* ... */
-  },
+client.registerToolHandler('tool_name', async (args) => {
+  /* ... */
 });
 ```
 

@@ -83,12 +83,9 @@ async function main() {
     timeout: 300000, // 5 minutes
   });
 
-  // Register tools
-  client.registerTool(getWeatherTool);
-  client.registerTool(calculateTool);
-
-  // Setup tools on server (dummy for now)
-  await client.setup();
+  // Register client-side handlers. Their schemas live in agentflow.json.
+  client.registerToolHandler(getWeatherTool.name, getWeatherTool.handler);
+  client.registerToolHandler(calculateTool.name, calculateTool.handler);
 
   // Create initial messages
   const messages = [Message.text_message('What is the weather in San Francisco?', 'user')];

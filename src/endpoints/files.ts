@@ -62,7 +62,6 @@ export interface FileAccessUrlResponse {
 export interface MultimodalConfigResponse {
   data: {
     media_storage_type: string;
-    media_storage_path: string;
     media_max_size_mb: number;
     document_handling: string;
   };

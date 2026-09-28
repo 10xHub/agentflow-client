@@ -47,7 +47,7 @@ export interface Tool {
 
 // Tool Registration - what users provide when registering tools
 export interface ToolRegistration {
-  node: string;
+  node?: string;
   name: string;
   description?: string;
   parameters?: ToolParameter;
@@ -117,10 +117,12 @@ export class ToolExecutor {
     this.tools.set(registration.name, toolDef);
 
     // Organize by node
-    if (!this.toolsByNode.has(registration.node)) {
-      this.toolsByNode.set(registration.node, new Map());
+    if (registration.node) {
+      if (!this.toolsByNode.has(registration.node)) {
+        this.toolsByNode.set(registration.node, new Map());
+      }
+      this.toolsByNode.get(registration.node)!.set(registration.name, toolDef);
     }
-    this.toolsByNode.get(registration.node)!.set(registration.name, toolDef);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { ToolRegistration, ToolExecutor, normalizeToolParameters } from './tools.js';
+import { ToolHandler, ToolRegistration, ToolExecutor } from './tools.js';
 import { Message } from './message.js';
 import { ping, PingContext, PingResponse } from './endpoints/ping.js';
 import { graph, GraphContext, GraphResponse } from './endpoints/graph.js';
@@ -133,13 +133,6 @@ import {
   FixGraphResponse,
 } from './endpoints/fixGraph.js';
 import {
-  setupGraph as setupGraphEndpoint,
-  SetupGraphContext,
-  SetupGraphRequest,
-  SetupGraphResponse,
-  RemoteTool,
-} from './endpoints/setupGraph.js';
-import {
   uploadFile as uploadFileEndpoint,
   getFile as getFileEndpoint,
   getFileInfo as getFileInfoEndpoint,
@@ -227,7 +220,6 @@ export class AgentFlowClient {
   private debug: boolean;
   private webSocketImpl?: WebSocketImpl;
   private toolExecutor: ToolExecutor;
-  private toolRegistrations: ToolRegistration[];
 
   constructor(config: AgentFlowConfig) {
     this.baseUrl = config.baseUrl;
@@ -239,7 +231,6 @@ export class AgentFlowClient {
     this.debug = config.debug || false;
     this.webSocketImpl = config.webSocketImpl;
     this.toolExecutor = new ToolExecutor([]);
-    this.toolRegistrations = [];
   }
 
   private createContext<T extends RequestContext>(): T {
@@ -259,41 +250,21 @@ export class AgentFlowClient {
    * Register a tool for remote execution
    */
   registerTool(registration: ToolRegistration): void {
-    this.toolRegistrations.push(registration);
     this.toolExecutor.registerTool(registration);
 
     if (this.debug) {
       console.debug(
-        `AgentFlowClient: Registered tool '${registration.name}' for node '${registration.node}'`
+        `AgentFlowClient: Registered remote tool handler '${registration.name}'`
       );
     }
   }
 
   /**
-   * Setup tools on the server by sending tool definitions
-   * This registers remote tools with the backend for graph execution
+   * Register only the client-side implementation of a remote tool.
+   * The trusted schema must be declared in the server's agentflow.json.
    */
-  async setup(): Promise<SetupGraphResponse> {
-    if (this.debug) {
-      console.debug('AgentFlowClient: Setting up tools on server');
-      console.debug(`AgentFlowClient: ${this.toolRegistrations.length} tools registered`);
-    }
-
-    // Convert tool registrations to RemoteTool format
-    const remoteTools: RemoteTool[] = this.toolRegistrations.map((reg) => ({
-      node_name: reg.node,
-      name: reg.name,
-      description: reg.description || '',
-      parameters: normalizeToolParameters(reg.parameters),
-    }));
-
-    const context = this.createContext<SetupGraphContext>();
-
-    const request: SetupGraphRequest = {
-      tools: remoteTools,
-    };
-
-    return setupGraphEndpoint(context, request);
+  registerToolHandler(name: string, handler: ToolHandler): void {
+    this.registerTool({ name, handler });
   }
 
   /**

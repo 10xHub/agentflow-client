@@ -135,7 +135,7 @@ describe('Invoke with Tool Execution', () => {
       debug: false,
     });
 
-    client.registerTool(mockTool);
+    client.registerToolHandler(mockTool.name, mockTool.handler);
 
     const messages = [Message.text_message('Test', 'user')];
     const result = await client.invoke(messages);

@@ -28,7 +28,7 @@ Entry point: `src/index.ts` -> `dist/index.js`. Source map:
 | `src/message.ts` | Message + content-block model mirroring the Python core (`TextBlock`, `ImageBlock`, `AudioBlock`, `VideoBlock`, `DocumentBlock`, `DataBlock`, `ToolCallBlock`, `RemoteToolCallBlock`, `MediaRef`, `AnnotationRef`, ...)                                                                                                                                                                                                                                              |
 | `src/request.ts` | Low-level request/auth helpers; `AgentFlowAuth` (Bearer / Basic / Header), `RequestContext`                                                                                                                                                                                                                                                                                                                                                                          |
 | `src/errors.ts`  | Error types                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `src/endpoints/` | One file per endpoint (request/response types + call impl): invoke, stream, wsStream, graph, graphTools, observability, setupGraph, stopGraph, fixGraph, stateSchema, threads, threadDetails, threadState, updateThreadState, clearThreadState, threadMessages, addThreadMessages, threadMessage, deleteThreadMessage, deleteThread, storeMemory, searchMemory, getMemory, updateMemory, deleteMemory, listMemories, forgetMemories, files, metadata, ping, realtime |
+| `src/endpoints/` | One file per endpoint (request/response types + call impl): invoke, stream, wsStream, graph, graphTools, observability, stopGraph, fixGraph, stateSchema, threads, threadDetails, threadState, updateThreadState, clearThreadState, threadMessages, addThreadMessages, threadMessage, deleteThreadMessage, deleteThread, storeMemory, searchMemory, getMemory, updateMemory, deleteMemory, listMemories, forgetMemories, files, metadata, ping, realtime |
 | `src/ws.ts`      | Shared WebSocket plumbing: subprotocol auth, URL building, injectable impl                                                                                                                                                                                                                                                                                                                                                                                           |
 
 ## `AgentFlowClient`
@@ -62,15 +62,15 @@ Methods map 1:1 onto the server (`agentflow-api`) endpoints:
   `listMemories`.
 - **Files / multimodal:** `uploadFile(...)`, `getFile(id) -> Blob`, `getFileAccessUrl(id)`,
   `getMultimodalConfig()`.
-- **Tools:** `registerTool(registration)` for client-side execution; remote tools are pushed to
-  the server during setup.
+- **Tools:** `registerToolHandler(name, handler)` for client-side execution; trusted schemas are
+  loaded by the server from `agentflow.json` at startup.
 
 ## Client-side tool execution
 
-`tools.ts` lets the browser/Node client own a tool's implementation. Register a `ToolHandler`
-(name, description, parameters, and an `execute` fn) via `client.registerTool(...)`; the
-`ToolExecutor` runs it when the server requests that tool during a run, then feeds the result
-back. Good for browser-only capabilities (geolocation, clipboard, DOM, local state).
+`tools.ts` lets the browser/Node client own a tool's implementation. Register a handler with
+`client.registerToolHandler(name, handler)`; the `ToolExecutor` runs it when the server requests
+that configured tool, then feeds the result back. Good for browser-only capabilities
+(geolocation, clipboard, DOM, local state).
 
 ## Auth
 
