@@ -26,7 +26,7 @@ export async function deleteMemory(
 ): Promise<DeleteMemoryResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Deleting memory with ID:', request.memoryId);
+      console.debug('TenxGraphClient: Deleting memory with ID:', request.memoryId);
     }
 
     const controller = new AbortController();
@@ -41,7 +41,7 @@ export async function deleteMemory(
     };
 
     if (context.debug) {
-      console.debug('AgentFlowClient: Delete request payload:', JSON.stringify(body, null, 2));
+      console.debug('TenxGraphClient: Delete request payload:', JSON.stringify(body, null, 2));
     }
 
     const response = await fetch(url, {
@@ -58,7 +58,7 @@ export async function deleteMemory(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Delete memory failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Delete memory failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Delete memory request failed',
@@ -71,7 +71,7 @@ export async function deleteMemory(
     const data: DeleteMemoryResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Memory deleted successfully', {
+      console.info('TenxGraphClient: Memory deleted successfully', {
         memory_id: request.memoryId,
         success: data.data.success,
       });
@@ -80,11 +80,11 @@ export async function deleteMemory(
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Delete memory timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Delete memory timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
     if (context.debug) {
-      console.debug('AgentFlowClient: Delete memory failed:', error);
+      console.debug('TenxGraphClient: Delete memory failed:', error);
     }
     throw error;
   }

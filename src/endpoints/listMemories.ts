@@ -26,7 +26,7 @@ export async function listMemories(
 ): Promise<ListMemoriesResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching list of memories', {
+      console.debug('TenxGraphClient: Fetching list of memories', {
         limit: request.limit,
       });
     }
@@ -45,7 +45,7 @@ export async function listMemories(
 
     if (context.debug) {
       console.debug(
-        'AgentFlowClient: List memories request payload:',
+        'TenxGraphClient: List memories request payload:',
         JSON.stringify(body, null, 2)
       );
     }
@@ -64,7 +64,7 @@ export async function listMemories(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: List memories failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: List memories failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'List memories request failed',
@@ -77,7 +77,7 @@ export async function listMemories(
     const data: ListMemoriesResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Memories list fetched successfully', {
+      console.info('TenxGraphClient: Memories list fetched successfully', {
         count: data.data.memories.length,
         limit: request.limit,
       });
@@ -86,11 +86,11 @@ export async function listMemories(
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: List memories timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: List memories timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
     if (context.debug) {
-      console.debug('AgentFlowClient: List memories failed:', error);
+      console.debug('TenxGraphClient: List memories failed:', error);
     }
     throw error;
   }

@@ -103,3 +103,6 @@ export * from './endpoints/metadata.js';
 export * from './agent.js';
 
 export * from './message.js';
+
+// Deprecated AgentFlow* aliases (removed in 2.0)
+export * from './compat.js';

@@ -3,7 +3,7 @@
  * Run with: npx tsx test-stream.ts
  */
 
-import { AgentFlowClient } from '../src/client.js';
+import { TenxGraphClient } from '../src/client.js';
 import { Message } from '../src/message.js';
 
 const SERVER_URL = 'http://127.0.0.1:8000';
@@ -30,7 +30,7 @@ async function testPing() {
 async function testStreaming() {
   console.log('\n🌊 Testing streaming functionality...');
 
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: SERVER_URL,
     debug: true,
     timeout: 60000, // 60 second timeout for streaming
@@ -194,7 +194,7 @@ async function testRawStreamEndpoint() {
 
 async function main() {
   console.log('========================================');
-  console.log('AgentFlow Streaming Verification Test');
+  console.log('10xGraph Streaming Verification Test');
   console.log('========================================');
   console.log(`Server: ${SERVER_URL}`);
   console.log(`Time: ${new Date().toISOString()}`);
@@ -209,7 +209,7 @@ async function main() {
   // Step 2: Test raw stream endpoint first
   const rawOk = await testRawStreamEndpoint();
 
-  // Step 3: Test with AgentFlowClient
+  // Step 3: Test with TenxGraphClient
   const streamOk = await testStreaming();
 
   console.log('\n========================================');

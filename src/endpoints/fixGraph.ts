@@ -35,7 +35,7 @@ export async function fixGraph(
 ): Promise<FixGraphResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fixing graph state for thread:', request.thread_id);
+      console.debug('TenxGraphClient: Fixing graph state for thread:', request.thread_id);
     }
 
     const controller = new AbortController();
@@ -55,7 +55,7 @@ export async function fixGraph(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Fix graph failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Fix graph failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Fix graph state failed',
@@ -68,7 +68,7 @@ export async function fixGraph(
     const data: FixGraphResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Graph state fixed successfully', {
+      console.info('TenxGraphClient: Graph state fixed successfully', {
         removed_count: data.data.removed_count,
         success: data.data.success,
       });
@@ -77,15 +77,15 @@ export async function fixGraph(
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fix graph failed:', error);
+      console.debug('TenxGraphClient: Fix graph failed:', error);
     }
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Fix graph timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Fix graph timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: Fix graph failed:', error);
+    console.error('TenxGraphClient: Fix graph failed:', error);
     throw error;
   }
 }

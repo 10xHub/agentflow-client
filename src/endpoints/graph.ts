@@ -45,7 +45,7 @@ export interface GraphResponse {
 export async function graph(context: GraphContext): Promise<GraphResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching graph from', context.baseUrl);
+      console.debug('TenxGraphClient: Fetching graph from', context.baseUrl);
     }
 
     const controller = new AbortController();
@@ -64,7 +64,7 @@ export async function graph(context: GraphContext): Promise<GraphResponse> {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Graph fetch failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Graph fetch failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Graph fetch failed',
@@ -77,21 +77,21 @@ export async function graph(context: GraphContext): Promise<GraphResponse> {
     const data: GraphResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Graph fetch successful', data);
+      console.info('TenxGraphClient: Graph fetch successful', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Graph fetch failed:', error);
+      console.debug('TenxGraphClient: Graph fetch failed:', error);
     }
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Graph fetch timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Graph fetch timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: Graph fetch failed:', error);
+    console.error('TenxGraphClient: Graph fetch failed:', error);
     throw error;
   }
 }

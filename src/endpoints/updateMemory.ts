@@ -28,7 +28,7 @@ export async function updateMemory(
 ): Promise<UpdateMemoryResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Updating memory with ID:', request.memoryId);
+      console.debug('TenxGraphClient: Updating memory with ID:', request.memoryId);
     }
 
     const controller = new AbortController();
@@ -45,7 +45,7 @@ export async function updateMemory(
     };
 
     if (context.debug) {
-      console.debug('AgentFlowClient: Request payload:', JSON.stringify(body, null, 2));
+      console.debug('TenxGraphClient: Request payload:', JSON.stringify(body, null, 2));
     }
 
     const response = await fetch(url, {
@@ -61,7 +61,7 @@ export async function updateMemory(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Update memory failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Update memory failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Update memory request failed',
@@ -74,7 +74,7 @@ export async function updateMemory(
     const data: UpdateMemoryResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Memory updated successfully', {
+      console.info('TenxGraphClient: Memory updated successfully', {
         memory_id: request.memoryId,
         success: data.data.success,
       });
@@ -83,7 +83,7 @@ export async function updateMemory(
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Update memory failed:', error);
+      console.debug('TenxGraphClient: Update memory failed:', error);
     }
     throw error;
   }

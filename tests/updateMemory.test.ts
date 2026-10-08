@@ -300,7 +300,7 @@ describe('Update Memory Endpoint Tests', () => {
       await expect(updateMemory(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Update memory failed with HTTP 404'
+        'TenxGraphClient: Update memory failed with HTTP 404'
       );
 
       consoleWarnSpy.mockRestore();
@@ -322,7 +322,7 @@ describe('Update Memory Endpoint Tests', () => {
       await expect(updateMemory(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Update memory failed with HTTP 400'
+        'TenxGraphClient: Update memory failed with HTTP 400'
       );
 
       consoleWarnSpy.mockRestore();
@@ -344,7 +344,7 @@ describe('Update Memory Endpoint Tests', () => {
       await expect(updateMemory(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Update memory failed with HTTP 500'
+        'TenxGraphClient: Update memory failed with HTTP 500'
       );
 
       consoleWarnSpy.mockRestore();
@@ -399,12 +399,12 @@ describe('Update Memory Endpoint Tests', () => {
       await updateMemory(mockContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Updating memory with ID:',
+        'TenxGraphClient: Updating memory with ID:',
         'mem-12345'
       );
 
       expect(consoleInfoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Memory updated successfully',
+        'TenxGraphClient: Memory updated successfully',
         expect.objectContaining({
           memory_id: 'mem-12345',
           success: true,
@@ -442,7 +442,7 @@ describe('Update Memory Endpoint Tests', () => {
       await updateMemory(mockContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Request payload:',
+        'TenxGraphClient: Request payload:',
         expect.stringContaining('"content"')
       );
 
@@ -468,7 +468,7 @@ describe('Update Memory Endpoint Tests', () => {
       await expect(updateMemory(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Update memory failed:',
+        'TenxGraphClient: Update memory failed:',
         expect.anything()
       );
 
@@ -510,11 +510,11 @@ describe('Update Memory Endpoint Tests', () => {
     });
   });
 
-  describe('AgentFlowClient.updateMemory', () => {
+  describe('TenxGraphClient.updateMemory', () => {
     it('should pass client config to context', async () => {
-      const { AgentFlowClient } = await import('../src/client');
+      const { TenxGraphClient } = await import('../src/client');
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: 'http://localhost:8000',
         authToken: 'client-token',
         timeout: 10000,

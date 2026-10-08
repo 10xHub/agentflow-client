@@ -6,7 +6,7 @@ export const REALTIME_OUTPUT_SAMPLE_RATE = 24000;
 export const REALTIME_INPUT_SAMPLE_RATE = 16000;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Wire types (mirror agentflow.core.realtime; init keys verified against the
+// Wire types (mirror tenxgraph.core.realtime; init keys verified against the
 // server's GraphService._realtime_overrides mapping)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -206,7 +206,7 @@ export class RealtimeSession {
       try {
         (f as (...a: unknown[]) => void)(...args);
       } catch (err) {
-        if (this.ctx.debug) console.warn('AgentFlowClient [realtime]: listener threw', err);
+        if (this.ctx.debug) console.warn('TenxGraphClient [realtime]: listener threw', err);
       }
     });
   }
@@ -217,7 +217,7 @@ export class RealtimeSession {
 
   private connect(): void {
     const url = buildWsUrl(this.ctx, '/v1/graph/live');
-    if (this.ctx.debug) console.debug('AgentFlowClient [realtime]: connecting to', url);
+    if (this.ctx.debug) console.debug('TenxGraphClient [realtime]: connecting to', url);
 
     const ws = openWebSocket(url, this.ctx);
     try {
@@ -270,7 +270,7 @@ export class RealtimeSession {
     try {
       parsed = JSON.parse(data) as RealtimeEvent;
     } catch {
-      if (this.ctx.debug) console.warn('AgentFlowClient [realtime]: bad JSON frame', data);
+      if (this.ctx.debug) console.warn('TenxGraphClient [realtime]: bad JSON frame', data);
       return;
     }
     if (parsed.type === 'session_update') {

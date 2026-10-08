@@ -124,5 +124,5 @@ jobs:
           mkdir -p /tmp/smoke && cd /tmp/smoke
           npm init -y >/dev/null
           npm install "$GITHUB_WORKSPACE"/*.tgz
-          node -e "const m=require('@10xscale/agentflow-client');if(!m.AgentFlowClient)throw new Error('CJS entry broken');console.log('CJS OK')"
-          node --input-type=module -e "import('@10xscale/agentflow-client').then(m=>{if(!m.AgentFlowClient)throw new Error('ESM entry broken');console.log('ESM OK')})"
+          node -e "const m=require('10xgraph-client');if(!m.TenxGraphClient||m.AgentFlowClient!==m.TenxGraphClient)throw new Error('CJS entry broken');console.log('CJS OK')"
+          node --input-type=module -e "import('10xgraph-client').then(m=>{if(!m.TenxGraphClient||m.AgentFlowClient!==m.TenxGraphClient)throw new Error('ESM entry broken');console.log('ESM OK')})"

@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AgentFlowClient } from '../src/index';
+import { TenxGraphClient } from '../src/index';
 
 const fetchMock = vi.fn();
 global.fetch = fetchMock;
 
-describe('AgentFlowClient thread listing helpers', () => {
+describe('TenxGraphClient thread listing helpers', () => {
   beforeEach(() => {
     fetchMock.mockReset();
     vi.clearAllMocks();
@@ -15,7 +15,7 @@ describe('AgentFlowClient thread listing helpers', () => {
   });
 
   it('supports object-style threads requests', async () => {
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       debug: false,
     });
@@ -43,7 +43,7 @@ describe('AgentFlowClient thread listing helpers', () => {
   });
 
   it('supports object-style thread message requests', async () => {
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       debug: false,
     });

@@ -379,7 +379,7 @@ describe('Delete Memory Endpoint Tests', () => {
       await expect(deleteMemory(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Delete memory failed:',
+        'TenxGraphClient: Delete memory failed:',
         expect.any(Error)
       );
 
@@ -415,7 +415,7 @@ describe('Delete Memory Endpoint Tests', () => {
       await deleteMemory(mockContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Deleting memory with ID:',
+        'TenxGraphClient: Deleting memory with ID:',
         'mem-12345'
       );
 
@@ -453,7 +453,7 @@ describe('Delete Memory Endpoint Tests', () => {
       await deleteMemory(mockContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Delete request payload:',
+        'TenxGraphClient: Delete request payload:',
         expect.stringContaining('soft_delete')
       );
 
@@ -490,7 +490,7 @@ describe('Delete Memory Endpoint Tests', () => {
     });
   });
 
-  describe('Integration with AgentFlowClient', () => {
+  describe('Integration with TenxGraphClient', () => {
     it('should properly integrate with client context', async () => {
       const mockResponse: DeleteMemoryResponse = {
         data: {

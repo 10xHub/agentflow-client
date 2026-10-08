@@ -1,4 +1,4 @@
-import { AgentFlowAuth, buildHeaders } from './request.js';
+import { TenxGraphAuth, buildHeaders } from './request.js';
 
 /**
  * Sec-WebSocket-Protocol token the server recognizes for browser-safe bearer auth.
@@ -6,7 +6,7 @@ import { AgentFlowAuth, buildHeaders } from './request.js';
  * extracts the second protocol entry as the token. This works in browsers (which
  * cannot set request headers on a WebSocket) and avoids leaking the token in the URL.
  */
-export const WS_BEARER_SUBPROTOCOL = 'agentflow-bearer';
+export const WS_BEARER_SUBPROTOCOL = '10xgraph-bearer';
 
 /** Minimal constructor shape shared by the browser `WebSocket` and the Node `ws` package. */
 export type WebSocketImpl = new (
@@ -19,7 +19,7 @@ export type WebSocketImpl = new (
 export interface WsAuthContext {
   baseUrl: string;
   authToken?: string | null;
-  auth?: AgentFlowAuth | null;
+  auth?: TenxGraphAuth | null;
   headers?: HeadersInit;
   credentials?: RequestCredentials;
   debug?: boolean;
@@ -49,7 +49,7 @@ export function resolveBearerToken(
 
 /**
  * Convert the HTTP base URL to a WebSocket URL and append `path`.
- * The token is never placed in the URL — it travels via the `agentflow-bearer`
+ * The token is never placed in the URL — it travels via the `10xgraph-bearer`
  * subprotocol (browser-safe) and, in Node, the Authorization header.
  */
 export function buildWsUrl(context: Pick<WsAuthContext, 'baseUrl'>, path: string): string {
@@ -64,7 +64,7 @@ export function buildWsUrl(context: Pick<WsAuthContext, 'baseUrl'>, path: string
 /**
  * Open a WebSocket with bearer auth.
  *
- * - If a token is present it is sent as the `agentflow-bearer` subprotocol (works
+ * - If a token is present it is sent as the `10xgraph-bearer` subprotocol (works
  *   in browsers and Node `ws`).
  * - In Node-style implementations that accept a third `options` argument, the
  *   Authorization header is also passed (ignored by browsers).
@@ -78,7 +78,7 @@ export function openWebSocket(url: string, context: WsAuthContext): WebSocket {
   if (!Impl) {
     throw new Error(
       'No WebSocket implementation available. In Node < 21 pass `webSocketImpl` ' +
-        'in the client config (e.g. the `ws` package: `new AgentFlowClient({ ..., webSocketImpl: WebSocket })`).'
+        'in the client config (e.g. the `ws` package: `new TenxGraphClient({ ..., webSocketImpl: WebSocket })`).'
     );
   }
 

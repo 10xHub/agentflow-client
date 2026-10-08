@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for the report. Please do **not** file security vulnerabilities here -
-        see [SECURITY.md](https://github.com/10xHub/agentflow/blob/main/agentflow-client/SECURITY.md).
+        see [SECURITY.md](https://github.com/10xGraph/10xgraph-client/blob/master/SECURITY.md).
 
   - type: checkboxes
     id: preflight
@@ -15,7 +15,7 @@ body:
       options:
         - label: I searched existing issues and this is not a duplicate.
           required: true
-        - label: This is about `@10xscale/agentflow-client`, not the API server or the core Python package.
+        - label: This is about `10xgraph-client`, not the API server or the core Python package.
           required: true
         - label: This is not a security vulnerability.
           required: true
@@ -80,7 +80,7 @@ body:
     id: server-version
     attributes:
       label: Server version
-      description: The `10xscale-agentflow-cli` version this client is talking to, if relevant.
+      description: The `10xgraph-api` version this client is talking to, if relevant.
     validations:
       required: false
 

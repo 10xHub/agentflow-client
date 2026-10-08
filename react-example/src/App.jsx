@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { AgentFlowClient, Message } from '@10xscale/agentflow-client';
+import { TenxGraphClient, Message } from '10xgraph-client';
 import './App.css';
 
-// Create the AgentFlow client - connects to localhost:8000
-const client = new AgentFlowClient({
+// Create the 10xGraph client - connects to localhost:8000
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
   debug: true,
 });
@@ -151,7 +151,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>🤖 AgentFlow Chat</h1>
+        <h1>🤖 10xGraph Chat</h1>
         <div className="connection-status">
           <span className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></span>
           {isConnected ? 'Connected' : 'Disconnected'}
@@ -177,7 +177,9 @@ function App() {
           {messages.length === 0 && (
             <div className="empty-state">
               <p>👋 Send a message to start chatting!</p>
-              <p className="hint">Make sure your AgentFlow server is running on localhost:8000</p>
+              <p className="hint">
+                Make sure your 10xGraph API server is running on localhost:8000
+              </p>
             </div>
           )}
 

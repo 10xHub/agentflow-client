@@ -33,7 +33,7 @@ export async function threadMessages(
 ): Promise<ThreadMessagesResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching thread messages for thread', request.threadId);
+      console.debug('TenxGraphClient: Fetching thread messages for thread', request.threadId);
     }
 
     const controller = new AbortController();
@@ -67,7 +67,7 @@ export async function threadMessages(
 
     if (!response.ok) {
       console.warn(
-        `AgentFlowClient: Checkpoint messages fetch failed with HTTP ${response.status}`
+        `TenxGraphClient: Checkpoint messages fetch failed with HTTP ${response.status}`
       );
       const error = await createErrorFromResponse(
         response,
@@ -81,13 +81,13 @@ export async function threadMessages(
     const data: ThreadMessagesResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Thread messages fetched successfully', data);
+      console.info('TenxGraphClient: Thread messages fetched successfully', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Checkpoint messages fetch failed:', error);
+      console.debug('TenxGraphClient: Checkpoint messages fetch failed:', error);
     }
     throw error;
   }

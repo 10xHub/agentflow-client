@@ -1,5 +1,5 @@
 /**
- * Example: Using AgentFlowClient with tool registration and invoke
+ * Example: Using TenxGraphClient with tool registration and invoke
  *
  * ⚠️ IMPORTANT: This example demonstrates remote tool registration for demonstration purposes.
  * In production, you should define most tools in your Python backend (agent graph) instead.
@@ -7,13 +7,13 @@
  * See: docs/tools-guide.md#remote-tools-vs-backend-tools
  *
  * This example demonstrates:
- * 1. Creating an AgentFlowClient
+ * 1. Creating an TenxGraphClient
  * 2. Registering tools for remote execution
  * 3. Setting up tools on the server
  * 4. Invoking the graph with automatic tool execution loop
  */
 
-import { AgentFlowClient, Message, ToolRegistration } from '../src/index.js';
+import { TenxGraphClient, Message, ToolRegistration } from '../src/index.js';
 
 // Example tool: Get current weather
 const getWeatherTool: ToolRegistration = {
@@ -76,14 +76,14 @@ const calculateTool: ToolRegistration = {
 
 async function main() {
   // Create client
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://127.0.0.1:8000',
     authToken: null,
     debug: true,
     timeout: 300000, // 5 minutes
   });
 
-  // Register client-side handlers. Their schemas live in agentflow.json.
+  // Register client-side handlers. Their schemas live in 10xgraph.json.
   client.registerToolHandler(getWeatherTool.name, getWeatherTool.handler);
   client.registerToolHandler(calculateTool.name, calculateTool.handler);
 

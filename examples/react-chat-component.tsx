@@ -2,14 +2,14 @@
  * Example: Simple React Chat Component
  *
  * This example demonstrates:
- * 1. Setting up AgentFlowClient in React with Context
+ * 1. Setting up TenxGraphClient in React with Context
  * 2. Managing conversation state with useState
  * 3. Using invoke() for batch message processing
  * 4. Handling loading and error states
  * 5. Displaying chat messages with proper formatting
  *
  * To use this component:
- * 1. Wrap your app with <AgentFlowProvider>
+ * 1. Wrap your app with <TenxGraphProvider>
  * 2. Use <SimpleChat /> anywhere in your component tree
  * 3. Customize styling as needed
  */
@@ -17,47 +17,47 @@
 'use client'; // For Next.js App Router
 
 import React, { useState, useMemo, createContext, useContext, ReactNode } from 'react';
-import { AgentFlowClient, Message, InvokeResult } from '@10xscale/agentflow-client';
+import { TenxGraphClient, Message, InvokeResult } from '10xgraph-client';
 
 // ============================================
 // Context Setup
 // ============================================
 
-interface AgentFlowContextType {
-  client: AgentFlowClient;
+interface TenxGraphContextType {
+  client: TenxGraphClient;
 }
 
-const AgentFlowContext = createContext<AgentFlowContextType | null>(null);
+const TenxGraphContext = createContext<TenxGraphContextType | null>(null);
 
-interface AgentFlowProviderProps {
+interface TenxGraphProviderProps {
   baseUrl: string;
   authToken?: string;
   children: ReactNode;
 }
 
 /**
- * Provider component that creates and shares the AgentFlowClient
+ * Provider component that creates and shares the TenxGraphClient
  * Place this high in your component tree (e.g., in App or layout)
  */
-export function AgentFlowProvider({ baseUrl, authToken, children }: AgentFlowProviderProps) {
+export function TenxGraphProvider({ baseUrl, authToken, children }: TenxGraphProviderProps) {
   const client = useMemo(() => {
-    return new AgentFlowClient({
+    return new TenxGraphClient({
       baseUrl,
       authToken,
       debug: true, // Enable for development
     });
   }, [baseUrl, authToken]);
 
-  return <AgentFlowContext.Provider value={{ client }}>{children}</AgentFlowContext.Provider>;
+  return <TenxGraphContext.Provider value={{ client }}>{children}</TenxGraphContext.Provider>;
 }
 
 /**
- * Hook to access the AgentFlowClient
+ * Hook to access the TenxGraphClient
  */
-function useAgentFlow() {
-  const context = useContext(AgentFlowContext);
+function useTenxGraph() {
+  const context = useContext(TenxGraphContext);
   if (!context) {
-    throw new Error('useAgentFlow must be used within AgentFlowProvider');
+    throw new Error('useTenxGraph must be used within TenxGraphProvider');
   }
   return context.client;
 }
@@ -74,7 +74,7 @@ interface ChatMessage {
 }
 
 export function SimpleChat() {
-  const client = useAgentFlow();
+  const client = useTenxGraph();
 
   // State management
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -155,7 +155,7 @@ export function SimpleChat() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h2 style={styles.title}>AgentFlow Chat</h2>
+        <h2 style={styles.title}>10xGraph Chat</h2>
         <button onClick={handleClear} style={styles.clearButton} disabled={messages.length === 0}>
           Clear
         </button>
@@ -376,16 +376,16 @@ const styles: { [key: string]: React.CSSProperties } = {
 /**
  * Example usage in your app:
  *
- * import { AgentFlowProvider, SimpleChat } from './examples/react-chat-component';
+ * import { TenxGraphProvider, SimpleChat } from './examples/react-chat-component';
  *
  * function App() {
  *   return (
- *     <AgentFlowProvider
+ *     <TenxGraphProvider
  *       baseUrl="http://localhost:8000"
  *       authToken="your-token"
  *     >
  *       <SimpleChat />
- *     </AgentFlowProvider>
+ *     </TenxGraphProvider>
  *   );
  * }
  */

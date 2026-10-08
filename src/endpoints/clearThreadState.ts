@@ -21,7 +21,7 @@ export async function clearThreadState(
 ): Promise<ClearThreadStateResponse> {
   try {
     if (context.debug) {
-      console.debug(`AgentFlowClient: Clearing thread state for thread ${threadId}`);
+      console.debug(`TenxGraphClient: Clearing thread state for thread ${threadId}`);
     }
 
     const controller = new AbortController();
@@ -40,7 +40,7 @@ export async function clearThreadState(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Thread state clear failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Thread state clear failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Thread state clear failed',
@@ -54,7 +54,7 @@ export async function clearThreadState(
 
     if (context.debug) {
       console.info(
-        `AgentFlowClient: Thread state cleared successfully for thread ${threadId}`,
+        `TenxGraphClient: Thread state cleared successfully for thread ${threadId}`,
         data
       );
     }
@@ -62,12 +62,12 @@ export async function clearThreadState(
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Thread state clear timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Thread state clear timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
     if (context.debug) {
-      console.debug(`AgentFlowClient: Thread state clear failed:`, error);
+      console.debug(`TenxGraphClient: Thread state clear failed:`, error);
     }
 
     throw error;

@@ -4,10 +4,10 @@
 
 | Version | Supported |
 | ------- | --------- |
-| `0.2.x` | Yes       |
-| `< 0.2` | No        |
+| `0.6.x` | Yes       |
+| `< 0.6` | No        |
 
-Only the latest minor release receives security fixes. `@10xscale/agentflow-client` is
+Only the latest minor release receives security fixes. `10xgraph-client` is
 pre-1.0; there are no long-term support branches yet.
 
 ## Reporting a vulnerability
@@ -17,7 +17,7 @@ pre-1.0; there are no long-term support branches yet.
 Report privately through either channel:
 
 1. **GitHub private vulnerability reporting** (preferred) - open a draft advisory at
-   https://github.com/10xHub/agentflow/security/advisories/new.
+   https://github.com/10xGraph/10xgraph-client/security/advisories/new.
 2. **Email** - `contact@10xscale.ai`, with `SECURITY` in the subject line.
 
 Please include:
@@ -54,7 +54,7 @@ In scope:
 
 Out of scope:
 
-- Vulnerabilities in the API server. Report those against `agentflow-api`.
+- Vulnerabilities in the API server. Report those against `10xgraph-api`.
 - Issues that require the application to pass attacker-controlled configuration
   (`baseUrl`, `auth`, custom `webSocketImpl`) to the client.
 - Anything in `examples/` or `react-example/`, which are illustrative and not published.

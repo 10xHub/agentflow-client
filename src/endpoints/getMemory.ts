@@ -26,7 +26,7 @@ export async function getMemory(
 ): Promise<GetMemoryResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching memory with ID:', request.memoryId);
+      console.debug('TenxGraphClient: Fetching memory with ID:', request.memoryId);
     }
 
     const controller = new AbortController();
@@ -53,7 +53,7 @@ export async function getMemory(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Get memory failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Get memory failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Get memory request failed',
@@ -66,7 +66,7 @@ export async function getMemory(
     const data: GetMemoryResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Memory fetched successfully', {
+      console.info('TenxGraphClient: Memory fetched successfully', {
         memory_id: request.memoryId,
         content: data.data.memory.content.substring(0, 50),
       });
@@ -75,7 +75,7 @@ export async function getMemory(
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Get memory failed:', error);
+      console.debug('TenxGraphClient: Get memory failed:', error);
     }
     throw error;
   }

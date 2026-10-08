@@ -67,7 +67,7 @@ export async function searchMemory(
 ): Promise<SearchMemoryResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Searching memories with query:', request.query);
+      console.debug('TenxGraphClient: Searching memories with query:', request.query);
     }
 
     const controller = new AbortController();
@@ -103,7 +103,7 @@ export async function searchMemory(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Search memory failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Search memory failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Search memory request failed',
@@ -116,7 +116,7 @@ export async function searchMemory(
     const data: SearchMemoryResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Memory search successful', {
+      console.info('TenxGraphClient: Memory search successful', {
         query: request.query,
         results_count: data.data.results.length,
       });
@@ -125,7 +125,7 @@ export async function searchMemory(
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Search memory failed:', error);
+      console.debug('TenxGraphClient: Search memory failed:', error);
     }
     throw error;
   }

@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AgentFlowClient, basicAuth, headerAuth } from '../src/index';
+import { TenxGraphClient, basicAuth, headerAuth } from '../src/index';
 import type { PingResponse } from '../src/index';
 
 const fetchMock = vi.fn();
 global.fetch = fetchMock;
 
-describe('AgentFlowClient auth configuration', () => {
+describe('TenxGraphClient auth configuration', () => {
   beforeEach(() => {
     fetchMock.mockReset();
     vi.clearAllMocks();
@@ -16,7 +16,7 @@ describe('AgentFlowClient auth configuration', () => {
   });
 
   it('supports basic authentication with custom headers and credentials', async () => {
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       auth: basicAuth('service-user', 'service-pass'),
       headers: { 'X-Trace-Id': 'trace-1' },
@@ -53,7 +53,7 @@ describe('AgentFlowClient auth configuration', () => {
   });
 
   it('supports non-authorization auth headers such as API keys', async () => {
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       auth: headerAuth('X-API-Key', 'secret-key'),
       debug: false,

@@ -542,11 +542,11 @@ describe('Store Memory Endpoint Tests', () => {
       await storeMemory(debugContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Storing memory with type',
+        'TenxGraphClient: Storing memory with type',
         MemoryType.SEMANTIC
       );
       expect(consoleInfoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Memory stored successfully',
+        'TenxGraphClient: Memory stored successfully',
         mockResponse
       );
 
@@ -563,7 +563,7 @@ describe('Store Memory Endpoint Tests', () => {
       await expect(storeMemory(debugContext, mockRequest)).rejects.toThrow();
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Store memory failed:',
+        'TenxGraphClient: Store memory failed:',
         expect.any(Error)
       );
 

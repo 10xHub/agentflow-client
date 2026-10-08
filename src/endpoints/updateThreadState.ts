@@ -26,8 +26,8 @@ export async function updateThreadState(
 ): Promise<UpdateThreadStateResponse> {
   try {
     if (context.debug) {
-      console.debug(`AgentFlowClient: Updating thread state for thread ${threadId}`);
-      console.debug(`AgentFlowClient: Request payload:`, JSON.stringify(request, null, 2));
+      console.debug(`TenxGraphClient: Updating thread state for thread ${threadId}`);
+      console.debug(`TenxGraphClient: Request payload:`, JSON.stringify(request, null, 2));
     }
 
     const controller = new AbortController();
@@ -47,7 +47,7 @@ export async function updateThreadState(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Thread state update failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Thread state update failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Thread state update failed',
@@ -61,7 +61,7 @@ export async function updateThreadState(
 
     if (context.debug) {
       console.info(
-        `AgentFlowClient: Thread state updated successfully for thread ${threadId}`,
+        `TenxGraphClient: Thread state updated successfully for thread ${threadId}`,
         data
       );
     }
@@ -69,12 +69,12 @@ export async function updateThreadState(
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Thread state update timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Thread state update timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
     if (context.debug) {
-      console.debug(`AgentFlowClient: Thread state update failed:`, error);
+      console.debug(`TenxGraphClient: Thread state update failed:`, error);
     }
 
     throw error;

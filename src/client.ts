@@ -144,12 +144,12 @@ import {
   FileInfoResponse,
   MultimodalConfigResponse,
 } from './endpoints/files.js';
-import { AgentFlowAuth, RequestContext } from './request.js';
+import { TenxGraphAuth, RequestContext } from './request.js';
 
-export interface AgentFlowConfig {
+export interface TenxGraphConfig {
   baseUrl: string;
   authToken?: string | null;
-  auth?: AgentFlowAuth | null;
+  auth?: TenxGraphAuth | null;
   headers?: HeadersInit;
   credentials?: RequestCredentials;
   timeout?: number; // default 5min
@@ -210,10 +210,10 @@ function normalizeThreadMessagesRequest(
   };
 }
 
-export class AgentFlowClient {
+export class TenxGraphClient {
   private baseUrl: string;
   private authToken?: string | null;
-  private auth?: AgentFlowAuth | null;
+  private auth?: TenxGraphAuth | null;
   private headers?: HeadersInit;
   private credentials?: RequestCredentials;
   private timeout: number;
@@ -221,7 +221,7 @@ export class AgentFlowClient {
   private webSocketImpl?: WebSocketImpl;
   private toolExecutor: ToolExecutor;
 
-  constructor(config: AgentFlowConfig) {
+  constructor(config: TenxGraphConfig) {
     this.baseUrl = config.baseUrl;
     this.authToken = config.authToken;
     this.auth = config.auth;
@@ -253,13 +253,13 @@ export class AgentFlowClient {
     this.toolExecutor.registerTool(registration);
 
     if (this.debug) {
-      console.debug(`AgentFlowClient: Registered remote tool handler '${registration.name}'`);
+      console.debug(`TenxGraphClient: Registered remote tool handler '${registration.name}'`);
     }
   }
 
   /**
    * Register only the client-side implementation of a remote tool.
-   * The trusted schema must be declared in the server's agentflow.json.
+   * The trusted schema must be declared in the server's 10xgraph.json.
    */
   registerToolHandler(name: string, handler: ToolHandler): void {
     this.registerTool({ name, handler });
@@ -643,7 +643,7 @@ export class AgentFlowClient {
    * ``{ event:"updates", data:{ status:"done" } }`` chunk after each run so
    * the client knows when to send the next resume request.
    *
-   * Auth: the bearer token is sent via the ``agentflow-bearer`` WebSocket
+   * Auth: the bearer token is sent via the ``10xgraph-bearer`` WebSocket
    * subprotocol (browser-safe; never placed in the URL), with the Authorization
    * header also set on Node runtimes.
    *

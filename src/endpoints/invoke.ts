@@ -91,7 +91,7 @@ async function makeSingleInvokeCall(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Invoke failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Invoke failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Invoke request failed',
@@ -107,11 +107,11 @@ async function makeSingleInvokeCall(
     clearTimeout(timeoutId);
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Invoke timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Invoke timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: Invoke failed:', error);
+    console.error('TenxGraphClient: Invoke failed:', error);
     throw error;
   }
 }
@@ -140,8 +140,8 @@ export async function invoke(
   const recursion_limit = request.recursion_limit || 25;
 
   if (context.debug) {
-    console.debug('AgentFlowClient: Starting invoke with recursion_limit:', recursion_limit);
-    console.debug('AgentFlowClient: Initial request:', JSON.stringify(request, null, 2));
+    console.debug('TenxGraphClient: Starting invoke with recursion_limit:', recursion_limit);
+    console.debug('TenxGraphClient: Initial request:', JSON.stringify(request, null, 2));
   }
 
   // Keep track of all messages across iterations
@@ -159,7 +159,7 @@ export async function invoke(
     iterations++;
 
     if (context.debug) {
-      console.debug(`AgentFlowClient: Iteration ${iterations}/${recursion_limit}`);
+      console.debug(`TenxGraphClient: Iteration ${iterations}/${recursion_limit}`);
     }
 
     // Prepare request for this iteration
@@ -172,7 +172,7 @@ export async function invoke(
     };
 
     if (context.debug) {
-      console.debug('AgentFlowClient: Request payload:', JSON.stringify(iterationRequest, null, 2));
+      console.debug('TenxGraphClient: Request payload:', JSON.stringify(iterationRequest, null, 2));
     }
 
     // Make the API call
@@ -180,8 +180,8 @@ export async function invoke(
     lastResponse = response;
 
     if (context.debug) {
-      console.info('AgentFlowClient: Invoke successful');
-      console.debug('AgentFlowClient: Response:', JSON.stringify(response, null, 2));
+      console.info('TenxGraphClient: Invoke successful');
+      console.debug('TenxGraphClient: Response:', JSON.stringify(response, null, 2));
     }
 
     // Add response messages to our collection
@@ -210,14 +210,14 @@ export async function invoke(
 
     if (hasToolCalls && context.toolExecutor) {
       if (context.debug) {
-        console.debug('AgentFlowClient: Found remote tool calls, executing...');
+        console.debug('TenxGraphClient: Found remote tool calls, executing...');
       }
 
       // Execute all tool calls using the ToolExecutor
       const toolResults = await context.toolExecutor.executeToolCalls(response.data.messages);
 
       if (context.debug) {
-        console.debug(`AgentFlowClient: Executed ${toolResults.length} tool calls`);
+        console.debug(`TenxGraphClient: Executed ${toolResults.length} tool calls`);
       }
 
       // Add tool results to all messages
@@ -231,7 +231,7 @@ export async function invoke(
     } else {
       // No more tool calls, we're done
       if (context.debug) {
-        console.debug('AgentFlowClient: No remote tool calls found, finishing');
+        console.debug('TenxGraphClient: No remote tool calls found, finishing');
       }
       break;
     }
@@ -241,7 +241,7 @@ export async function invoke(
   if (iterations >= recursion_limit) {
     recursionLimitReached = true;
     if (context.debug) {
-      console.warn(`AgentFlowClient: Recursion limit of ${recursion_limit} reached`);
+      console.warn(`TenxGraphClient: Recursion limit of ${recursion_limit} reached`);
     }
   }
 
@@ -258,8 +258,8 @@ export async function invoke(
   };
 
   if (context.debug) {
-    console.debug(`AgentFlowClient: Invoke completed after ${iterations} iterations`);
-    console.debug(`AgentFlowClient: Total messages: ${allMessages.length}`);
+    console.debug(`TenxGraphClient: Invoke completed after ${iterations} iterations`);
+    console.debug(`TenxGraphClient: Total messages: ${allMessages.length}`);
   }
 
   return result;

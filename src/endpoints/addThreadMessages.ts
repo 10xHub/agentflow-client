@@ -29,7 +29,7 @@ export async function addThreadMessages(
 ): Promise<AddThreadMessagesResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Adding thread messages to thread', request.threadId);
+      console.debug('TenxGraphClient: Adding thread messages to thread', request.threadId);
     }
 
     const controller = new AbortController();
@@ -57,7 +57,7 @@ export async function addThreadMessages(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Add checkpoint messages failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Add checkpoint messages failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Add thread messages failed',
@@ -70,13 +70,13 @@ export async function addThreadMessages(
     const data: AddThreadMessagesResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Thread messages added successfully', data);
+      console.info('TenxGraphClient: Thread messages added successfully', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Add checkpoint messages failed:', error);
+      console.debug('TenxGraphClient: Add checkpoint messages failed:', error);
     }
     throw error;
   }

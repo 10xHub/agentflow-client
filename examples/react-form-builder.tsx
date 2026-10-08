@@ -9,7 +9,7 @@
  * 5. Submitting state to the agent
  *
  * To use this component:
- * 1. Wrap your app with <AgentFlowProvider>
+ * 1. Wrap your app with <TenxGraphProvider>
  * 2. Use <DynamicFormBuilder /> to generate forms from your agent's schema
  * 3. Customize field renderers as needed
  */
@@ -18,45 +18,45 @@
 
 import React, { useState, useEffect, useMemo, createContext, useContext, ReactNode } from 'react';
 import {
-  AgentFlowClient,
+  TenxGraphClient,
   StateSchemaResponse,
   FieldSchema,
   InvokeResult,
   Message,
-} from '@10xscale/agentflow-client';
+} from '10xgraph-client';
 
 // ============================================
 // Context Setup
 // ============================================
 
-interface AgentFlowContextType {
-  client: AgentFlowClient;
+interface TenxGraphContextType {
+  client: TenxGraphClient;
 }
 
-const AgentFlowContext = createContext<AgentFlowContextType | null>(null);
+const TenxGraphContext = createContext<TenxGraphContextType | null>(null);
 
-interface AgentFlowProviderProps {
+interface TenxGraphProviderProps {
   baseUrl: string;
   authToken?: string;
   children: ReactNode;
 }
 
-export function AgentFlowProvider({ baseUrl, authToken, children }: AgentFlowProviderProps) {
+export function TenxGraphProvider({ baseUrl, authToken, children }: TenxGraphProviderProps) {
   const client = useMemo(() => {
-    return new AgentFlowClient({
+    return new TenxGraphClient({
       baseUrl,
       authToken,
       debug: true,
     });
   }, [baseUrl, authToken]);
 
-  return <AgentFlowContext.Provider value={{ client }}>{children}</AgentFlowContext.Provider>;
+  return <TenxGraphContext.Provider value={{ client }}>{children}</TenxGraphContext.Provider>;
 }
 
-function useAgentFlow() {
-  const context = useContext(AgentFlowContext);
+function useTenxGraph() {
+  const context = useContext(TenxGraphContext);
   if (!context) {
-    throw new Error('useAgentFlow must be used within AgentFlowProvider');
+    throw new Error('useTenxGraph must be used within TenxGraphProvider');
   }
   return context.client;
 }
@@ -71,7 +71,7 @@ interface FormField {
 }
 
 export function DynamicFormBuilder() {
-  const client = useAgentFlow();
+  const client = useTenxGraph();
 
   // State management
   const [fields, setFields] = useState<FormField[]>([]);
@@ -628,16 +628,16 @@ const styles: { [key: string]: React.CSSProperties } = {
 /**
  * Example usage in your app:
  *
- * import { AgentFlowProvider, DynamicFormBuilder } from './examples/react-form-builder';
+ * import { TenxGraphProvider, DynamicFormBuilder } from './examples/react-form-builder';
  *
  * function App() {
  *   return (
- *     <AgentFlowProvider
+ *     <TenxGraphProvider
  *       baseUrl="http://localhost:8000"
  *       authToken="your-token"
  *     >
  *       <DynamicFormBuilder />
- *     </AgentFlowProvider>
+ *     </TenxGraphProvider>
  *   );
  * }
  */

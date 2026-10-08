@@ -351,11 +351,11 @@ describe('Add Thread Messages Endpoint Tests', () => {
       await addThreadMessages(debugContext, mockRequest);
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Adding thread messages to thread',
+        'TenxGraphClient: Adding thread messages to thread',
         mockRequest.threadId
       );
       expect(infoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Thread messages added successfully',
+        'TenxGraphClient: Thread messages added successfully',
         mockResponse
       );
     });
@@ -373,7 +373,7 @@ describe('Add Thread Messages Endpoint Tests', () => {
       await expect(addThreadMessages(debugContext, mockRequest)).rejects.toThrow('Test error');
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Add checkpoint messages failed:',
+        'TenxGraphClient: Add checkpoint messages failed:',
         expect.any(Error)
       );
     });

@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AgentFlowClient, Message, StreamChunk } from '../src/index';
+import { TenxGraphClient, Message, StreamChunk } from '../src/index';
 
 describe('Stream API', () => {
-  let client: AgentFlowClient;
+  let client: TenxGraphClient;
 
   beforeEach(() => {
-    client = new AgentFlowClient({
+    client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       timeout: 5000,
       debug: false,
@@ -264,7 +264,7 @@ describe('Stream API', () => {
         });
       });
 
-      const clientWithShortTimeout = new AgentFlowClient({
+      const clientWithShortTimeout = new TenxGraphClient({
         baseUrl: 'http://localhost:8000',
         timeout: 100, // 100ms timeout
         debug: false,

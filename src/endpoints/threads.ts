@@ -38,7 +38,7 @@ export async function threads(
 ): Promise<ThreadsResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching threads list');
+      console.debug('TenxGraphClient: Fetching threads list');
       if (request?.search) {
         console.debug(`  Search: ${request.search}`);
       }
@@ -81,7 +81,7 @@ export async function threads(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Threads list fetch failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Threads list fetch failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Threads list fetch failed',
@@ -94,18 +94,18 @@ export async function threads(
     const data: ThreadsResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Threads list fetched successfully', data);
+      console.info('TenxGraphClient: Threads list fetched successfully', data);
       console.debug(`  Found ${data.data.threads.length} threads`);
     }
 
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Threads list fetch timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Threads list fetch timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
     if (context.debug) {
-      console.debug('AgentFlowClient: Threads list fetch failed:', error);
+      console.debug('TenxGraphClient: Threads list fetch failed:', error);
     }
     throw error;
   }

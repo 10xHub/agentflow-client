@@ -2,17 +2,17 @@
  * Stream Invoke Example
  *
  * This example demonstrates how to use the streamInvoke method
- * for real-time streaming responses from the AgentFlow API.
+ * for real-time streaming responses from the 10xGraph API.
  */
 
-import { AgentFlowClient, Message, StreamChunk, StreamEventType } from '../src/index.js';
+import { TenxGraphClient, Message, StreamChunk, StreamEventType } from '../src/index.js';
 
 /**
  * Basic streaming example
  */
 async function basicStreamExample() {
   // Create client
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://127.0.0.1:8000',
     debug: true,
   });
@@ -71,7 +71,7 @@ async function basicStreamExample() {
  * Collect all chunks then process them
  */
 async function collectAndProcessExample() {
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://127.0.0.1:8000',
     debug: false,
   });
@@ -97,7 +97,7 @@ async function collectAndProcessExample() {
  * Real-time UI update simulation
  */
 async function realtimeUIExample() {
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://127.0.0.1:8000',
     debug: false,
   });
@@ -132,7 +132,7 @@ async function realtimeUIExample() {
  * With error handling
  */
 async function withErrorHandlingExample() {
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://127.0.0.1:8000',
     timeout: 30000, // 30 seconds
     debug: false,
@@ -170,7 +170,7 @@ async function withErrorHandlingExample() {
  * Multiple messages example
  */
 async function multiMessageExample() {
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://127.0.0.1:8000',
   });
 

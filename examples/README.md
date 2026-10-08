@@ -1,6 +1,6 @@
-# AgentFlow Client Examples
+# 10xGraph Client Examples
 
-This directory contains complete, runnable examples demonstrating how to use the @10xscale/agentflow-client library.
+This directory contains complete, runnable examples demonstrating how to use the 10xgraph-client library.
 
 ## 📁 Examples Overview
 
@@ -87,11 +87,11 @@ npx ts-node examples/state-schema-examples.ts
 ### Prerequisites
 
 1. **Node.js 18+** installed
-2. **AgentFlow API** running locally or accessible endpoint
+2. **10xGraph API** running locally or accessible endpoint
 3. **Environment variables** set (optional):
    ```bash
-   export AGENTFLOW_API_URL="http://localhost:8000"
-   export AGENTFLOW_API_TOKEN="your-token"
+   export TENXGRAPH_API_URL="http://localhost:8000"
+   export TENXGRAPH_API_TOKEN="your-token"
    ```
 
 ### Installation
@@ -142,10 +142,10 @@ Each example follows this structure:
 
 ```typescript
 // 1. Import dependencies
-import { AgentFlowClient, Message } from '@10xscale/agentflow-client';
+import { TenxGraphClient, Message } from '10xgraph-client';
 
 // 2. Configure client
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
   authToken: null,
   debug: true,
@@ -179,14 +179,14 @@ Update `baseUrl` in examples to match your API server:
 
 ```typescript
 // Local development
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
 });
 
 // Production
-const client = new AgentFlowClient({
-  baseUrl: 'https://api.agentflow.example.com',
-  authToken: process.env.AGENTFLOW_API_TOKEN,
+const client = new TenxGraphClient({
+  baseUrl: 'https://api.example.com',
+  authToken: process.env.TENXGRAPH_API_TOKEN,
 });
 ```
 
@@ -195,7 +195,7 @@ const client = new AgentFlowClient({
 Enable debug mode to see detailed logs:
 
 ```typescript
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
   debug: true, // 🔍 Shows requests, responses, tool execution
 });

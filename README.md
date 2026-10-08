@@ -1,132 +1,103 @@
-# AgentFlow Client
+# 10xGraph Client
 
-> **Agentflow is now 10xGraph.** `0.5.0` is the final release of `@10xscale/agentflow-client` on npm.
-> The TypeScript client continues under the 10xGraph name; the new package is announced at
-> [10xgraph.com](https://10xgraph.com) and [github.com/10xGraph](https://github.com/10xGraph).
-> Existing installs keep working. See [Moving to 10xGraph](#-moving-to-10xgraph) below.
-
-[![npm version](https://img.shields.io/npm/v/@10xscale/agentflow-client.svg)](https://www.npmjs.com/package/@10xscale/agentflow-client)
+[![npm version](https://img.shields.io/npm/v/10xgraph-client.svg)](https://www.npmjs.com/package/10xgraph-client)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A TypeScript client library for the **AgentFlow** multi-agent system API. Build conversational AI applications with streaming responses, realtime audio, tool execution, and dynamic state management.
+The TypeScript client for the **10xGraph** API server. Build conversational AI applications with
+streaming responses, realtime audio, client-side tool execution, and dynamic state management.
 
-## ✨ Features
+10xGraph by 10xScale: graph engineering for production AI agents.
 
-- 🚀 **Simple API** - Clean, intuitive client for AgentFlow
-- 💬 **Streaming Support** - Real-time streaming responses for chat UIs
-- 🔧 **Tool Execution** - Automatic local tool execution with recursion handling
-- 📊 **State Management** - Dynamic state schema with validation
-- 🎙️ **Realtime Audio** - WebSocket audio-to-audio via `/v1/graph/live`
-- 📘 **TypeScript First** - Full TypeScript support with comprehensive types
-- 🎯 **Zero Config** - Works out of the box with sensible defaults
+> **Coming from `@10xscale/agentflow-client`?** This is the same client under its new name.
+> Change the import and you are done; the old `AgentFlow*` names still work until 2.0. See
+> [Migrating from `@10xscale/agentflow-client`](#migrating-from-10xscaleagentflow-client).
 
-## 📦 Installation
+## Features
+
+- **Simple API**: one client class with a method per server endpoint
+- **Streaming**: HTTP and WebSocket streaming for chat UIs
+- **Tool execution**: run browser-side tools locally, with recursion handling
+- **State management**: dynamic state schema with validation
+- **Realtime audio**: WebSocket audio-to-audio via `/v1/graph/live`
+- **TypeScript first**: full type definitions, dual ESM + CJS
+
+## Installation
 
 ```bash
-npm install @10xscale/agentflow-client
+npm install 10xgraph-client
 # or
-yarn add @10xscale/agentflow-client
+yarn add 10xgraph-client
 # or
-pnpm add @10xscale/agentflow-client
+pnpm add 10xgraph-client
 ```
 
 ### Version compatibility
 
-This package versions independently of the Python packages, so the numbers do not line up. Pick
-versions by the table below rather than by matching version numbers:
+The client versions independently of the Python packages. Pick versions by this table rather than
+by matching numbers:
 
-| `@10xscale/agentflow-client` (npm) | `10xscale-agentflow-cli` (API server) | `10xscale-agentflow` (core) |
-| ---------------------------------- | ------------------------------------- | --------------------------- |
-| 0.5.x                              | >= 0.6.0, or `10xgraph-api`           | >= 0.10.0, or `10xgraph`    |
-| 0.4.x                              | >= 0.5.0                              | >= 0.9.0                    |
-| 0.3.x                              | >= 0.5.0                              | >= 0.9.0                    |
+| `10xgraph-client` (npm)                | API server                                        | Core framework                 |
+| -------------------------------------- | ------------------------------------------------- | ------------------------------ |
+| 0.6.x                                  | `10xgraph-api` >= 0.7.0                           | `10xgraph` >= 0.10.1           |
+| `@10xscale/agentflow-client` 0.5.x     | `10xscale-agentflow-cli` >= 0.6.0, `10xgraph-api` | `10xscale-agentflow` >= 0.10.0 |
+| `@10xscale/agentflow-client` 0.3-0.4.x | `10xscale-agentflow-cli` >= 0.5.0                 | `10xscale-agentflow` >= 0.9.0  |
 
-The client version tracks the **API server** (`10xscale-agentflow-cli`), which is what it talks to;
-the core version follows from whatever the server requires (the CLI pins
-`10xscale-agentflow>=0.9.0`). Client 0.5.x needs server >= 0.6.0 because tool schemas moved to
-`remote_tools` in `agentflow.json` and `client.setup()` was removed. Client 0.3.x and later need
-server >= 0.5.0 specifically for `graphTools()` and `observability()`; the invoke, stream, thread, memory, and file endpoints work
-against older servers too. Client releases before 0.3.0 are not supported - upgrade rather than
-pinning them.
+The client tracks the **API server**, which is what it talks to. Client 0.6.x authenticates
+WebSockets with the `10xgraph-bearer` subprotocol, which `10xgraph-api` 0.7.0 introduced. Against
+an older `10xscale-agentflow-cli` server, HTTP endpoints still work, but `wsStream()` and
+`realtime()` with bearer auth do not; stay on `@10xscale/agentflow-client@0.5.0` until the server
+is upgraded.
 
-## 🔀 Moving to 10xGraph
+## Quick Start
 
-The project is renamed to **10xGraph** (by 10xScale) because "Agentflow" is shared by several
-unrelated projects and was hard to find. The client, license and maintainers stay the same.
-
-**What changes**
-
-|                   | Before                                                 | After                                              |
-| ----------------- | ------------------------------------------------------ | -------------------------------------------------- |
-| Core framework    | `10xscale-agentflow`                                   | `10xgraph` (import `tenxgraph`)                    |
-| API server + CLI  | `10xscale-agentflow-cli`                               | `10xgraph-api`                                     |
-| TypeScript client | `@10xscale/agentflow-client`                           | announced in the 10xGraph repositories             |
-| Website           | [agentflow.10xscale.ai](https://agentflow.10xscale.ai) | [10xgraph.com](https://10xgraph.com)               |
-| GitHub            | [github.com/10xHub](https://github.com/10xHub)         | [github.com/10xGraph](https://github.com/10xGraph) |
-
-**What happens to this package**
-
-- `0.5.0` is the last version of `@10xscale/agentflow-client`. No further releases, fixes or
-  security patches will be published under this name.
-- Installed copies keep working. Pin `@10xscale/agentflow-client@0.5.0` if you cannot migrate yet.
-- It works against `10xscale-agentflow-cli` >= 0.6.0 and against `10xgraph-api`, which still
-  accepts the `agentflow-bearer` WebSocket subprotocol this client sends.
-- Your application code carries over. Switch the client package once its 10xGraph release is
-  published.
-
----
-
-## 🚀 Quick Start
-
-### Basic Usage
+### Basic usage
 
 ```typescript
-import { AgentFlowClient, Message } from '@10xscale/agentflow-client';
+import { TenxGraphClient, Message } from '10xgraph-client';
 
-// Initialize client
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
-  authToken: 'your-token', // optional legacy Bearer auth
+  authToken: 'your-token', // optional bearer auth
   debug: true, // optional
 });
 
-// Send a message and get response
 const result = await client.invoke([Message.text_message('Hello, how can you help me?', 'user')]);
 
-console.log(result.messages); // Array of response messages
+console.log(result.messages);
 ```
 
-### Authentication Options
+Start a local server with `10xgraph api` (from the `10xgraph-api` package).
+
+### Authentication options
 
 ```typescript
-import { AgentFlowClient, basicAuth, headerAuth } from '@10xscale/agentflow-client';
+import { TenxGraphClient, basicAuth, headerAuth } from '10xgraph-client';
 
-const bearerClient = new AgentFlowClient({
+const bearerClient = new TenxGraphClient({
   baseUrl: 'https://api.example.com',
-  authToken: process.env.AGENTFLOW_TOKEN,
+  authToken: process.env.TENXGRAPH_TOKEN,
 });
 
-const basicClient = new AgentFlowClient({
+const basicClient = new TenxGraphClient({
   baseUrl: 'https://api.example.com',
   auth: basicAuth('service-user', 'service-password'),
 });
 
-const apiKeyClient = new AgentFlowClient({
+const apiKeyClient = new TenxGraphClient({
   baseUrl: 'https://api.example.com',
-  auth: headerAuth('X-API-Key', process.env.AGENTFLOW_API_KEY!),
+  auth: headerAuth('X-API-Key', process.env.TENXGRAPH_API_KEY!),
 });
 
-const sessionClient = new AgentFlowClient({
+const sessionClient = new TenxGraphClient({
   baseUrl: 'https://api.example.com',
   credentials: 'include',
 });
 ```
 
-### Streaming Chat
+### Streaming chat
 
 ```typescript
-// Stream responses in real-time
 const stream = client.stream([Message.text_message('Tell me a story', 'user')]);
 
 for await (const chunk of stream) {
@@ -141,9 +112,9 @@ for await (const chunk of stream) {
 Transport-only: you stream PCM16 in and get PCM16 out. Mic capture and playback are yours to wire.
 
 ```ts
-import { AgentFlowClient } from '@10xscale/agentflow-client';
+import { TenxGraphClient } from '10xgraph-client';
 
-const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000', authToken });
+const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000', authToken });
 
 const session = client.realtime(
   { model: 'gemini-2.5-flash-live', modalities: 'AUDIO' },
@@ -161,15 +132,15 @@ session.sendAudio(micChunk); // PCM16 @ 16 kHz (Uint8Array | ArrayBuffer)
 session.close(); // graceful end; disables reconnect
 ```
 
-Auth uses the browser-safe `agentflow-bearer` subprotocol automatically. In Node < 21 (no global
+Auth uses the browser-safe `10xgraph-bearer` subprotocol automatically. In Node < 21 (no global
 `WebSocket`), pass an implementation:
 
 ```ts
 import WebSocket from 'ws';
-const client = new AgentFlowClient({ baseUrl, authToken, webSocketImpl: WebSocket });
+const client = new TenxGraphClient({ baseUrl, authToken, webSocketImpl: WebSocket });
 ```
 
-### File Uploads And Access URLs
+### File uploads and access URLs
 
 ```typescript
 const upload = await client.uploadFile(file);
@@ -184,12 +155,15 @@ const fileUrl = await client.getFileAccessUrl(upload.data.file_id);
 const msg = Message.withFile('Summarize this document', upload.data.file_id, upload.data.mime_type);
 ```
 
-### Tool Registration
+### Tool registration
 
-**⚠️ Important:** Remote tools (registered client-side) should **only** be used for browser-level APIs like `localStorage`, `navigator.geolocation`, etc. For most operations (database queries, external API calls, calculations), define your tools in the Python backend instead. See [How to register remote tools](https://agentflow.10xscale.ai/docs/how-to/client/register-remote-tools) for details.
+**Important:** remote tools (registered client-side) should **only** be used for browser-level APIs
+like `localStorage` or `navigator.geolocation`. For most operations (database queries, external API
+calls, calculations), define your tools in the Python backend instead. See
+[Remote tools](https://10xgraph.com/docs/client/remote-tools) for details.
 
 ```typescript
-// Matching trusted schema must be declared in the server's agentflow.json.
+// Matching trusted schema must be declared in the server's 10xgraph.json.
 client.registerToolHandler('get_weather', async ({ location }) => {
   return { temperature: 72, conditions: 'sunny' };
 });
@@ -198,7 +172,7 @@ client.registerToolHandler('get_weather', async ({ location }) => {
 const result = await client.invoke([Message.text_message('What is the weather in NYC?', 'user')]);
 ```
 
-Declare model-facing metadata on the server, never from an untrusted client:
+Declare model-facing metadata in the server's `10xgraph.json`, never from an untrusted client:
 
 ```json
 {
@@ -219,33 +193,31 @@ Declare model-facing metadata on the server, never from an untrusted client:
 
 No client setup call is required or available.
 
-## 📚 Documentation
+## Documentation
 
-Full documentation lives at **[agentflow.10xscale.ai](https://agentflow.10xscale.ai/docs/get-started)**.
+Full documentation lives at **[10xgraph.com/docs](https://10xgraph.com/docs/client)**.
 
-### Getting Started
+### Guides
 
-- **[Connect a client](https://agentflow.10xscale.ai/docs/get-started/connect-client)** - Setup and first request
-- **[`AgentFlowClient` reference](https://agentflow.10xscale.ai/docs/reference/client/agentflow-client)** - Constructor config and every method
-- **[`Message` and content blocks](https://agentflow.10xscale.ai/docs/reference/client/message)** - The message and content-block types
-
-### Core Concepts
-
-- **[Invoke API](https://agentflow.10xscale.ai/docs/reference/client/invoke)** - Request/response pattern with tool execution
-- **[Stream API](https://agentflow.10xscale.ai/docs/reference/client/stream)** - Real-time streaming responses
-- **[Graph and state schema](https://agentflow.10xscale.ai/docs/reference/client/graph)** - `graphStateSchema()` and graph lifecycle
-- **[Tools reference](https://agentflow.10xscale.ai/docs/reference/client/tools)** - Tool registration and execution ⚠️ **Important: Remote vs Backend tools**
+- **[Create a client](https://10xgraph.com/docs/client/create-client)**: setup and first request
+- **[Invoke an agent](https://10xgraph.com/docs/client/invoke-agent)**: request/response with tool execution
+- **[Stream responses](https://10xgraph.com/docs/client/stream-responses)**: real-time streaming
+- **[Remote tools](https://10xgraph.com/docs/client/remote-tools)**: when to use client-side tools
+- **[Realtime audio](https://10xgraph.com/docs/client/realtime-audio)**: the `/v1/graph/live` session
+- **[Error handling](https://10xgraph.com/docs/client/error-handling)**: error classes and recovery
 
 ### Reference
 
-- **[Reference overview](https://agentflow.10xscale.ai/docs/reference)** - Python library, REST/WebSocket API, CLI, and TypeScript client
-- **[Troubleshooting](https://agentflow.10xscale.ai/docs/troubleshooting/client)** - Common issues and solutions
+- **[`TenxGraphClient`](https://10xgraph.com/docs/reference/client/client)**: constructor config and every method
+- **[`Message` and content blocks](https://10xgraph.com/docs/reference/client/message)**
+- **[Auth](https://10xgraph.com/docs/reference/client/auth)** and **[Errors](https://10xgraph.com/docs/reference/client/errors)**
+- **[Troubleshooting](https://10xgraph.com/docs/troubleshooting/client)**: common issues and solutions
 
-## 🎯 Key APIs
+## Key APIs
 
-### `invoke()` - Batch Processing
+### `invoke()`: batch processing
 
-Execute agent with automatic tool execution loop:
+Execute the agent with an automatic tool execution loop:
 
 ```typescript
 const result = await client.invoke(messages, {
@@ -254,9 +226,7 @@ const result = await client.invoke(messages, {
 });
 ```
 
-### `stream()` - Real-time Streaming
-
-Stream responses as they're generated:
+### `stream()`: real-time streaming
 
 ```typescript
 const stream = client.stream(messages);
@@ -265,16 +235,15 @@ for await (const chunk of stream) {
 }
 ```
 
-### `graphStateSchema()` - Dynamic Schema
+### `graphStateSchema()`: dynamic schema
 
-Get agent state schema for form generation and validation:
+Get the agent state schema for form generation and validation:
 
 ```typescript
 const schema = await client.graphStateSchema();
-// Build forms, validate data, generate types
 ```
 
-### `graphTools()` - Tool Inventory
+### `graphTools()`: tool inventory
 
 List the tools the graph's tool nodes expose, grouped by node. Each tool is tagged with its
 source (`local`, `mcp`, or `remote`):
@@ -284,9 +253,9 @@ const { data } = await client.graphTools();
 // data.nodes[].tools[] -> { name, description, source, parameters }
 ```
 
-### `observability(threadId, runId?)` - Run Traces
+### `observability(threadId, runId?)`: run traces
 
-Fetch the reconstructed trace for a run - spans, events, and cost. Defaults to the thread's
+Fetch the reconstructed trace for a run (spans, events, and cost). Defaults to the thread's
 latest run:
 
 ```typescript
@@ -294,100 +263,106 @@ const trace = await client.observability(threadId);
 const specific = await client.observability(threadId, runId);
 ```
 
-### Tool Registration
+## Examples
 
-Register local tools that agents can execute:
+The [`examples/`](examples/) directory has complete working examples:
 
-```typescript
-client.registerToolHandler('tool_name', async (args) => {
-  /* ... */
-});
-```
+- **[invoke-example.ts](examples/invoke-example.ts)**: basic invoke with tool execution
+- **[stream-example.ts](examples/stream-example.ts)**: streaming responses
+- **[state-schema-examples.ts](examples/state-schema-examples.ts)**: form generation and validation
 
-## 💡 Examples
-
-Check out the [`examples/`](examples/) directory for complete working examples:
-
-- **[invoke-example.ts](examples/invoke-example.ts)** - Basic invoke with tool execution
-- **[stream-example.ts](examples/stream-example.ts)** - Streaming responses
-- **[state-schema-examples.ts](examples/state-schema-examples.ts)** - Form generation and validation
-
-## 🏗️ Architecture
+## Architecture
 
 ```
-┌─────────────────────┐
-│   Your Application  │
-└──────────┬──────────┘
-           │
-           │ AgentFlowClient
+┌──────────────────────┐
+│   Your application   │
+└──────────┬───────────┘
+           │ TenxGraphClient
            ▼
-┌─────────────────────┐
-│  @10xscale/agentflow-client    │  ← This library
-│  - Client           │
-│  - Tools            │
-│  - Messages         │
-└──────────┬──────────┘
-           │
+┌──────────────────────┐
+│   10xgraph-client    │  <- this library
+│   client, tools,     │
+│   messages           │
+└──────────┬───────────┘
            │ HTTP/HTTPS + WebSocket
            ▼
-┌─────────────────────┐
-│  AgentFlow Server   │  ← Your backend
-│  (Multi-agent API)  │
-└─────────────────────┘
+┌──────────────────────┐
+│   10xgraph-api       │  <- your backend
+│   (10xgraph api)     │
+└──────────────────────┘
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ```typescript
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: string,           // Required: API base URL
-  authToken?: string,        // Optional: legacy Bearer token
-  auth?: AgentFlowAuth,      // Optional: basic/custom header auth
+  authToken?: string,        // Optional: bearer token
+  auth?: TenxGraphAuth,      // Optional: bearer/basic/custom header auth
   headers?: HeadersInit,     // Optional: extra headers for every request
   credentials?: RequestCredentials, // Optional: cookie/session auth
-  timeout?: number,          // Optional: Request timeout (default: 5min)
-  debug?: boolean,           // Optional: Enable debug logging
+  timeout?: number,          // Optional: request timeout (default: 5 min)
+  debug?: boolean,           // Optional: enable debug logging
   webSocketImpl?: typeof WebSocket  // Node < 21 (pass the 'ws' package)
 });
 ```
+
+## Migrating from `@10xscale/agentflow-client`
+
+The project was renamed from Agentflow to **10xGraph** because "Agentflow" is shared by several
+unrelated projects and was hard to find. The client, license and maintainers are the same.
+
+| Before                                                 | After                                |
+| ------------------------------------------------------ | ------------------------------------ |
+| `npm install @10xscale/agentflow-client`               | `npm install 10xgraph-client`        |
+| `AgentFlowClient`, `AgentFlowConfig`                   | `TenxGraphClient`, `TenxGraphConfig` |
+| `AgentFlowError`                                       | `TenxGraphError`                     |
+| `AgentFlowAuth` (+ `Bearer`/`Basic`/`Header` variants) | `TenxGraphAuth` (+ same variants)    |
+| WS subprotocol `agentflow-bearer`                      | `10xgraph-bearer`                    |
+| Server `10xscale-agentflow-cli`, `agentflow.json`      | `10xgraph-api`, `10xgraph.json`      |
+
+Steps:
+
+1. `npm uninstall @10xscale/agentflow-client && npm install 10xgraph-client`
+2. Replace `'@10xscale/agentflow-client'` with `'10xgraph-client'` in your imports.
+3. Upgrade the server to `10xgraph-api` >= 0.7.0 if you use `wsStream()` or `realtime()`.
+4. Optionally rename `AgentFlow*` identifiers to `TenxGraph*`. The old names are exported as
+   deprecated aliases of the same classes and types, so `instanceof AgentFlowError` keeps working.
+   They are removed in 2.0.
+
+One observable difference: errors now report `error.name === 'TenxGraphError'` instead of
+`'AgentFlowError'`. Use `instanceof` rather than comparing names.
 
 ## Module formats
 
 Ships dual ESM + CJS with types. `import` resolves `dist/index.js` (ESM); `require` resolves
 `dist/index.cjs`. Tree-shakeable (`"sideEffects": false`).
 
-## 🧪 Testing
+## Testing
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests once
-npm run test:run
-
-# Build the library
-npm run build
+npm test          # watch mode
+npm run test:run  # run once
+npm run build     # build the library
 ```
 
-## 📝 TypeScript Support
-
-Full TypeScript support with comprehensive type definitions:
+## TypeScript support
 
 ```typescript
 import type {
-  AgentFlowClient,
+  TenxGraphClient,
   Message,
   ToolRegistration,
   InvokeResult,
   StreamChunk,
   AgentState,
   AgentStateSchema,
-} from '@10xscale/agentflow-client';
+} from '10xgraph-client';
 ```
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -395,25 +370,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
-Agentflow is [MIT licensed](https://github.com/10xHub/agentflow-client/blob/master/LICENSE) and
-made by [10xScale](https://10xscale.ai). Contributions are accepted under the same license.
+10xGraph is [MIT licensed](LICENSE) and made by [10xScale](https://10xscale.ai). Contributions are
+accepted under the same license.
 
-## 🆘 Support
+## Support
 
-- 📚 [Documentation](https://agentflow.10xscale.ai/docs/get-started)
-- 🐛 [Issue Tracker](https://github.com/10xHub/agentflow-client/issues)
-- 📦 [npm package](https://www.npmjs.com/package/@10xscale/agentflow-client) (final release: `0.5.0`)
-- [10xGraph](https://10xgraph.com) and [github.com/10xGraph](https://github.com/10xGraph): where development continues
-
-## 🙏 Acknowledgments
-
-Built for the **AgentFlow** multi-agent system framework.
-
----
-
-Developed by [10xScale](https://10xscale.ai). New projects should start on
-[10xGraph](https://github.com/10xGraph).
-
-**Made with ❤️ for the AgentFlow community**
+- [Documentation](https://10xgraph.com/docs/client)
+- [Issue tracker](https://github.com/10xGraph/10xgraph-client/issues)
+- [npm package](https://www.npmjs.com/package/10xgraph-client)
+- [10xgraph.com](https://10xgraph.com) and [github.com/10xGraph](https://github.com/10xGraph)

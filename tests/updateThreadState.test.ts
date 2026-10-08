@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { updateThreadState } from '../src/endpoints/updateThreadState';
 import type { UpdateThreadStateResponse } from '../src/endpoints/updateThreadState';
-import { AgentFlowClient } from '../src/client';
+import { TenxGraphClient } from '../src/client';
 import type { TextBlock } from '../src/message';
 
 describe('updateThreadState endpoint', () => {
@@ -331,7 +331,7 @@ describe('updateThreadState endpoint', () => {
     });
   });
 
-  describe('AgentFlowClient.updateThreadState', () => {
+  describe('TenxGraphClient.updateThreadState', () => {
     it('should call the updateThreadState endpoint with correct parameters', async () => {
       const fetchMock = vi.fn().mockResolvedValue({
         ok: true,
@@ -340,7 +340,7 @@ describe('updateThreadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
         timeout: 5000,
@@ -364,7 +364,7 @@ describe('updateThreadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'my-token',
         timeout: 10000,
@@ -385,7 +385,7 @@ describe('updateThreadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
       });
@@ -407,7 +407,7 @@ describe('updateThreadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
       });
@@ -430,7 +430,7 @@ describe('updateThreadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
       });

@@ -233,9 +233,9 @@ describe('Delete Thread Endpoint Tests', () => {
 
       await deleteThread(debugContext, mockRequest);
 
-      expect(consoleDebugSpy).toHaveBeenCalledWith('AgentFlowClient: Deleting thread', 'thread: 5');
+      expect(consoleDebugSpy).toHaveBeenCalledWith('TenxGraphClient: Deleting thread', 'thread: 5');
       expect(consoleInfoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Thread deleted successfully',
+        'TenxGraphClient: Thread deleted successfully',
         mockResponse
       );
 
@@ -271,7 +271,7 @@ describe('Delete Thread Endpoint Tests', () => {
       await expect(deleteThread(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Delete thread failed with HTTP 404'
+        'TenxGraphClient: Delete thread failed with HTTP 404'
       );
 
       consoleWarnSpy.mockRestore();
@@ -291,7 +291,7 @@ describe('Delete Thread Endpoint Tests', () => {
       await expect(deleteThread(slowContext, mockRequest)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Delete thread timeout after 50ms'
+        'TenxGraphClient: Delete thread timeout after 50ms'
       );
 
       consoleWarnSpy.mockRestore();
