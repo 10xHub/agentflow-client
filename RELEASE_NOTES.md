@@ -5,6 +5,55 @@ Human-facing notes for the current release. For the full history see
 
 ---
 
+## 0.5.0: the final release of `@10xscale/agentflow-client`
+
+Agentflow is now **10xGraph**. The project continues under a new name because
+"Agentflow" is shared by several unrelated projects, which made it hard to find.
+Nothing about the client, its license or its maintainers changes.
+
+No further versions of `@10xscale/agentflow-client` will be published to npm. Existing
+installs keep working; pin `@10xscale/agentflow-client@0.5.0` if you need to stay on it.
+
+|                   | Before                       | After                                              |
+| ----------------- | ---------------------------- | -------------------------------------------------- |
+| Core framework    | `10xscale-agentflow`         | `10xgraph` (import `tenxgraph`)                    |
+| API server + CLI  | `10xscale-agentflow-cli`     | `10xgraph-api`                                     |
+| TypeScript client | `@10xscale/agentflow-client` | announced in the 10xGraph repositories             |
+| Website           | agentflow.10xscale.ai        | [10xgraph.com](https://10xgraph.com)               |
+| GitHub            | github.com/10xHub            | [github.com/10xGraph](https://github.com/10xGraph) |
+
+This release works with `10xscale-agentflow-cli` >= 0.6.0 and with `10xgraph-api`, which
+still accepts the `agentflow-bearer` WebSocket subprotocol this client sends.
+
+### Breaking: `client.setup()` is gone
+
+The server removed `POST /v1/graph/setup` in `10xscale-agentflow-cli` 0.6.0, so a client
+can no longer tell the model what a tool is. Tool schemas are declared on the server under
+`remote_tools` in `agentflow.json`, and the client registers only the implementation:
+
+```typescript
+// before
+client.registerTool({ node: 'assistant', name: 'get_weather', parameters, handler });
+await client.setup();
+
+// after: the schema lives in agentflow.json
+client.registerToolHandler('get_weather', handler);
+```
+
+`registerTool()` still works, and `node` is now optional, but its `description` and
+`parameters` are no longer sent anywhere.
+
+### Smaller changes
+
+- `RealtimeInit.model` is optional. The server uses it only when it is listed in
+  `websocket.realtime_models`.
+- `MultimodalConfigResponse` no longer declares `media_storage_path`, which the server does
+  not return.
+- The npm page now links to the client's own repository and to
+  [10xgraph.com](https://10xgraph.com).
+
+---
+
 ## 0.3.0
 
 A production-readiness pass that fixes packaging, security, and tooling defects which made

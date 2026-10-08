@@ -253,9 +253,7 @@ export class AgentFlowClient {
     this.toolExecutor.registerTool(registration);
 
     if (this.debug) {
-      console.debug(
-        `AgentFlowClient: Registered remote tool handler '${registration.name}'`
-      );
+      console.debug(`AgentFlowClient: Registered remote tool handler '${registration.name}'`);
     }
   }
 

@@ -1,5 +1,10 @@
 # AgentFlow Client
 
+> **Agentflow is now 10xGraph.** `0.5.0` is the final release of `@10xscale/agentflow-client` on npm.
+> The TypeScript client continues under the 10xGraph name; the new package is announced at
+> [10xgraph.com](https://10xgraph.com) and [github.com/10xGraph](https://github.com/10xGraph).
+> Existing installs keep working. See [Moving to 10xGraph](#-moving-to-10xgraph) below.
+
 [![npm version](https://img.shields.io/npm/v/@10xscale/agentflow-client.svg)](https://www.npmjs.com/package/@10xscale/agentflow-client)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -33,15 +38,44 @@ versions by the table below rather than by matching version numbers:
 
 | `@10xscale/agentflow-client` (npm) | `10xscale-agentflow-cli` (API server) | `10xscale-agentflow` (core) |
 | ---------------------------------- | ------------------------------------- | --------------------------- |
+| 0.5.x                              | >= 0.6.0, or `10xgraph-api`           | >= 0.10.0, or `10xgraph`    |
 | 0.4.x                              | >= 0.5.0                              | >= 0.9.0                    |
 | 0.3.x                              | >= 0.5.0                              | >= 0.9.0                    |
 
 The client version tracks the **API server** (`10xscale-agentflow-cli`), which is what it talks to;
 the core version follows from whatever the server requires (the CLI pins
-`10xscale-agentflow>=0.9.0`). Client 0.3.x and later need server >= 0.5.0 specifically for
-`graphTools()` and `observability()`; the invoke, stream, thread, memory, and file endpoints work
+`10xscale-agentflow>=0.9.0`). Client 0.5.x needs server >= 0.6.0 because tool schemas moved to
+`remote_tools` in `agentflow.json` and `client.setup()` was removed. Client 0.3.x and later need
+server >= 0.5.0 specifically for `graphTools()` and `observability()`; the invoke, stream, thread, memory, and file endpoints work
 against older servers too. Client releases before 0.3.0 are not supported - upgrade rather than
 pinning them.
+
+## 🔀 Moving to 10xGraph
+
+The project is renamed to **10xGraph** (by 10xScale) because "Agentflow" is shared by several
+unrelated projects and was hard to find. The client, license and maintainers stay the same.
+
+**What changes**
+
+|                   | Before                                                 | After                                              |
+| ----------------- | ------------------------------------------------------ | -------------------------------------------------- |
+| Core framework    | `10xscale-agentflow`                                   | `10xgraph` (import `tenxgraph`)                    |
+| API server + CLI  | `10xscale-agentflow-cli`                               | `10xgraph-api`                                     |
+| TypeScript client | `@10xscale/agentflow-client`                           | announced in the 10xGraph repositories             |
+| Website           | [agentflow.10xscale.ai](https://agentflow.10xscale.ai) | [10xgraph.com](https://10xgraph.com)               |
+| GitHub            | [github.com/10xHub](https://github.com/10xHub)         | [github.com/10xGraph](https://github.com/10xGraph) |
+
+**What happens to this package**
+
+- `0.5.0` is the last version of `@10xscale/agentflow-client`. No further releases, fixes or
+  security patches will be published under this name.
+- Installed copies keep working. Pin `@10xscale/agentflow-client@0.5.0` if you cannot migrate yet.
+- It works against `10xscale-agentflow-cli` >= 0.6.0 and against `10xgraph-api`, which still
+  accepts the `agentflow-bearer` WebSocket subprotocol this client sends.
+- Your application code carries over. Switch the client package once its 10xGraph release is
+  published.
+
+---
 
 ## 🚀 Quick Start
 
@@ -168,16 +202,18 @@ Declare model-facing metadata on the server, never from an untrusted client:
 
 ```json
 {
-  "remote_tools": [{
-    "node": "assistant",
-    "name": "get_weather",
-    "description": "Get current weather for a location",
-    "parameters": {
-      "type": "object",
-      "properties": {"location": {"type": "string"}},
-      "required": ["location"]
+  "remote_tools": [
+    {
+      "node": "assistant",
+      "name": "get_weather",
+      "description": "Get current weather for a location",
+      "parameters": {
+        "type": "object",
+        "properties": { "location": { "type": "string" } },
+        "required": ["location"]
+      }
     }
-  }]
+  ]
 }
 ```
 
@@ -368,11 +404,16 @@ made by [10xScale](https://10xscale.ai). Contributions are accepted under the sa
 
 - 📚 [Documentation](https://agentflow.10xscale.ai/docs/get-started)
 - 🐛 [Issue Tracker](https://github.com/10xHub/agentflow-client/issues)
+- 📦 [npm package](https://www.npmjs.com/package/@10xscale/agentflow-client) (final release: `0.5.0`)
+- [10xGraph](https://10xgraph.com) and [github.com/10xGraph](https://github.com/10xGraph): where development continues
 
 ## 🙏 Acknowledgments
 
 Built for the **AgentFlow** multi-agent system framework.
 
 ---
+
+Developed by [10xScale](https://10xscale.ai). New projects should start on
+[10xGraph](https://github.com/10xGraph).
 
 **Made with ❤️ for the AgentFlow community**

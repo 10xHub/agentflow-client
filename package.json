@@ -1,7 +1,7 @@
 {
   "name": "@10xscale/agentflow-client",
-  "version": "0.4.0",
-  "description": "TypeScript client library for AgentFlow API - build intelligent agents with thread management, streaming, memory, and tool execution",
+  "version": "0.5.0",
+  "description": "Final release under this name: the project continues as 10xGraph (https://10xgraph.com). TypeScript client for the 10xScale Agentflow API server: invoke and stream agent graphs, manage threads, memory and files, run client-side tools, and realtime audio.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -42,13 +42,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/10xHub/agentflow.git",
-    "directory": "agentflow-client"
+    "url": "git+https://github.com/10xHub/agentflow-client.git"
   },
   "bugs": {
-    "url": "https://github.com/10xHub/agentflow/issues"
+    "url": "https://github.com/10xHub/agentflow-client/issues"
   },
-  "homepage": "https://github.com/10xHub/agentflow/tree/main/agentflow-client#readme",
+  "homepage": "https://10xgraph.com",
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@vitest/coverage-v8": "^3.2.7",
@@ -65,6 +64,8 @@
   },
   "keywords": [
     "agentflow",
+    "10xscale",
+    "10xgraph",
     "agent",
     "ai",
     "llm",

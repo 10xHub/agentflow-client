@@ -18,7 +18,50 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [Unreleased]
+## [0.5.0] - 2026-10-08
+
+**Final release of `@10xscale/agentflow-client`.** Agentflow is now 10xGraph
+([10xgraph.com](https://10xgraph.com), [github.com/10xGraph](https://github.com/10xGraph)).
+No further versions will be published under this name; the TypeScript client continues
+under the 10xGraph name. Installed copies keep working, and
+`@10xscale/agentflow-client@0.5.0` can be pinned.
+
+### Breaking
+
+- **`client.setup()` is removed**, together with the `setupGraph` endpoint module and its
+  exported types (`SetupGraphContext`, `SetupGraphRequest`, `SetupGraphResponse`,
+  `RemoteTool`). The server removed `POST /v1/graph/setup` in `10xscale-agentflow-cli`
+  0.6.0, so the call could no longer succeed against a current server. Clients can no longer
+  define the schema the model sees.
+
+  **Migration:** declare each client-executed tool (node, name, description, parameters)
+  under `remote_tools` in the server's `agentflow.json`, and register only its handler on the
+  client with `client.registerToolHandler(name, handler)`. Delete any `await client.setup()`
+  call.
+
+### Added
+
+- `client.registerToolHandler(name, handler)` registers the client-side implementation of a
+  remote tool whose schema is declared on the server.
+
+### Changed
+
+- `ToolRegistration.node` is optional. `registerTool()` still works; its `description` and
+  `parameters` are no longer sent anywhere.
+- `RealtimeInit.model` is optional. The server honours it only when the model is listed in
+  `websocket.realtime_models`, and otherwise uses the agent's own model. `tools_tags` can only
+  narrow the agent's own tag filter.
+- `MultimodalConfigResponse.data` no longer declares `media_storage_path`; the server does not
+  return it.
+- Package metadata points at the client's own repository
+  ([10xHub/agentflow-client](https://github.com/10xHub/agentflow-client)) and at
+  [10xgraph.com](https://10xgraph.com).
+
+### Compatibility
+
+Requires `10xscale-agentflow-cli` >= 0.6.0, the first server release with `remote_tools` in
+`agentflow.json`. It also works with the renamed server `10xgraph-api`, which still accepts the
+`agentflow-bearer` WebSocket subprotocol this client sends.
 
 ---
 
@@ -183,7 +226,7 @@ Initial entry in this changelog. Releases before `0.2.0` were not tracked here.
 - Added the realtime audio client (`client.realtime(...)` returning `RealtimeSession`).
 - Added dual ESM/CJS exports.
 
-[Unreleased]: https://github.com/10xHub/agentflow/compare/v0.4.0...HEAD
-[0.4.0]: https://github.com/10xHub/agentflow/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/10xHub/agentflow/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/10xHub/agentflow/releases/tag/v0.2.0
+[0.5.0]: https://github.com/10xHub/agentflow-client/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/10xHub/agentflow-client/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/10xHub/agentflow-client/compare/v-0.2.0...v0.3.0
+[0.2.0]: https://github.com/10xHub/agentflow-client/releases/tag/v-0.2.0
