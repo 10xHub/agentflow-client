@@ -99,12 +99,12 @@ function* processBuffer(
       try {
         const chunk = JSON.parse(line) as StreamChunk;
         if (debug) {
-          console.debug('AgentFlowClient: Stream chunk received (NDJSON):', chunk.event);
+          console.debug('TenxGraphClient: Stream chunk received (NDJSON):', chunk.event);
         }
         yield chunk;
       } catch (error) {
         if (debug) {
-          console.warn('AgentFlowClient: Failed to parse NDJSON line:', line.slice(0, 100), error);
+          console.warn('TenxGraphClient: Failed to parse NDJSON line:', line.slice(0, 100), error);
         }
       }
     }
@@ -117,14 +117,14 @@ function* processBuffer(
       try {
         const chunk = JSON.parse(extracted.json) as StreamChunk;
         if (debug) {
-          console.debug('AgentFlowClient: Stream chunk received (concat):', chunk.event);
+          console.debug('TenxGraphClient: Stream chunk received (concat):', chunk.event);
         }
         yield chunk;
         buffer = extracted.remaining;
       } catch (error) {
         if (debug) {
           console.warn(
-            'AgentFlowClient: Failed to parse concatenated JSON:',
+            'TenxGraphClient: Failed to parse concatenated JSON:',
             extracted.json.slice(0, 100),
             error
           );
@@ -138,14 +138,14 @@ function* processBuffer(
         try {
           const chunk = JSON.parse(buffer.trim()) as StreamChunk;
           if (debug) {
-            console.debug('AgentFlowClient: Final stream chunk:', chunk.event);
+            console.debug('TenxGraphClient: Final stream chunk:', chunk.event);
           }
           yield chunk;
           buffer = '';
         } catch (error) {
           if (debug) {
             console.warn(
-              'AgentFlowClient: Failed to parse final buffer:',
+              'TenxGraphClient: Failed to parse final buffer:',
               buffer.slice(0, 100),
               error
             );
@@ -249,8 +249,8 @@ export async function* streamInvoke(
   const recursion_limit = request.recursion_limit || 25;
 
   if (context.debug) {
-    console.debug('AgentFlowClient: Starting stream invoke with recursion_limit:', recursion_limit);
-    console.debug('AgentFlowClient: Initial request:', JSON.stringify(request, null, 2));
+    console.debug('TenxGraphClient: Starting stream invoke with recursion_limit:', recursion_limit);
+    console.debug('TenxGraphClient: Initial request:', JSON.stringify(request, null, 2));
   }
 
   let currentMessages = request.messages;
@@ -264,7 +264,7 @@ export async function* streamInvoke(
     iterations++;
 
     if (context.debug) {
-      console.debug(`AgentFlowClient: Stream iteration ${iterations}/${recursion_limit}`);
+      console.debug(`TenxGraphClient: Stream iteration ${iterations}/${recursion_limit}`);
     }
 
     // Prepare request for this iteration
@@ -278,7 +278,7 @@ export async function* streamInvoke(
 
     if (context.debug) {
       console.debug(
-        'AgentFlowClient: Stream request payload:',
+        'TenxGraphClient: Stream request payload:',
         JSON.stringify(iterationRequest, null, 2)
       );
     }
@@ -302,7 +302,7 @@ export async function* streamInvoke(
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        console.warn(`AgentFlowClient: Stream failed with HTTP ${response.status}`);
+        console.warn(`TenxGraphClient: Stream failed with HTTP ${response.status}`);
         const error = await createErrorFromResponse(
           response,
           'Stream request failed',
@@ -331,8 +331,8 @@ export async function* streamInvoke(
       }
 
       if (context.debug) {
-        console.info('AgentFlowClient: Stream iteration completed');
-        console.debug('AgentFlowClient: Received', responseMessages.length, 'messages');
+        console.info('TenxGraphClient: Stream iteration completed');
+        console.debug('TenxGraphClient: Received', responseMessages.length, 'messages');
       }
 
       // Check if there are remote tool calls to execute
@@ -340,14 +340,14 @@ export async function* streamInvoke(
 
       if (hasToolCalls && context.toolExecutor) {
         if (context.debug) {
-          console.debug('AgentFlowClient: Found remote tool calls, executing...');
+          console.debug('TenxGraphClient: Found remote tool calls, executing...');
         }
 
         // Execute all tool calls using the ToolExecutor
         const toolResults = await context.toolExecutor.executeToolCalls(responseMessages);
 
         if (context.debug) {
-          console.debug(`AgentFlowClient: Executed ${toolResults.length} tool calls`);
+          console.debug(`TenxGraphClient: Executed ${toolResults.length} tool calls`);
         }
 
         // Serialize tool results for next iteration
@@ -358,7 +358,7 @@ export async function* streamInvoke(
       } else {
         // No more tool calls, we're done
         if (context.debug) {
-          console.debug('AgentFlowClient: No remote tool calls found, finishing');
+          console.debug('TenxGraphClient: No remote tool calls found, finishing');
         }
         break;
       }
@@ -366,11 +366,11 @@ export async function* streamInvoke(
       clearTimeout(timeoutId);
 
       if ((error as Error).name === 'AbortError') {
-        console.warn(`AgentFlowClient: Stream timeout after ${context.timeout}ms`);
+        console.warn(`TenxGraphClient: Stream timeout after ${context.timeout}ms`);
         throw new Error(`Request timeout after ${context.timeout}ms`);
       }
 
-      console.error('AgentFlowClient: Stream failed:', error);
+      console.error('TenxGraphClient: Stream failed:', error);
       throw error;
     }
   }
@@ -378,12 +378,12 @@ export async function* streamInvoke(
   // Check if we hit the recursion limit
   if (iterations >= recursion_limit) {
     if (context.debug) {
-      console.warn(`AgentFlowClient: Recursion limit of ${recursion_limit} reached`);
+      console.warn(`TenxGraphClient: Recursion limit of ${recursion_limit} reached`);
     }
   }
 
   if (context.debug) {
-    console.debug(`AgentFlowClient: Stream invoke completed after ${iterations} iterations`);
+    console.debug(`TenxGraphClient: Stream invoke completed after ${iterations} iterations`);
   }
 }
 

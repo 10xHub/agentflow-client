@@ -279,12 +279,12 @@ describe('Thread Message Endpoint Tests', () => {
       await threadMessage(debugContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Fetching thread message',
+        'TenxGraphClient: Fetching thread message',
         'thread: 5',
         'message: 39dff7f2-b300-465a-82a3-3985b7c8bc81'
       );
       expect(consoleInfoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Thread message fetched successfully',
+        'TenxGraphClient: Thread message fetched successfully',
         mockResponse
       );
     });
@@ -322,12 +322,12 @@ describe('Thread Message Endpoint Tests', () => {
       await expect(threadMessage(debugContext, mockRequest)).rejects.toThrow('Network error');
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Fetching thread message',
+        'TenxGraphClient: Fetching thread message',
         'thread: 5',
         'message: 39dff7f2-b300-465a-82a3-3985b7c8bc81'
       );
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Thread message fetch failed:',
+        'TenxGraphClient: Thread message fetch failed:',
         error
       );
     });

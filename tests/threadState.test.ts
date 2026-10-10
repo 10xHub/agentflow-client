@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { threadState } from '../src/endpoints/threadState';
 import type { ThreadStateResponse } from '../src/endpoints/threadState';
-import { AgentFlowClient } from '../src/client';
+import { TenxGraphClient } from '../src/client';
 import type { TextBlock } from '../src/message';
 
 describe('threadState endpoint', () => {
@@ -235,7 +235,7 @@ describe('threadState endpoint', () => {
     });
   });
 
-  describe('AgentFlowClient.threadState', () => {
+  describe('TenxGraphClient.threadState', () => {
     it('should call the threadState endpoint with correct parameters', async () => {
       const fetchMock = vi.fn().mockResolvedValue({
         ok: true,
@@ -243,7 +243,7 @@ describe('threadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
         timeout: 5000,
@@ -268,7 +268,7 @@ describe('threadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'my-token',
         timeout: 10000,
@@ -288,7 +288,7 @@ describe('threadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
         timeout: 5000,
@@ -310,7 +310,7 @@ describe('threadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
       });
@@ -330,7 +330,7 @@ describe('threadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
       });

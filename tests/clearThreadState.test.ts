@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { clearThreadState } from '../src/endpoints/clearThreadState';
 import type { ClearThreadStateResponse } from '../src/endpoints/clearThreadState';
-import { AgentFlowClient } from '../src/client';
+import { TenxGraphClient } from '../src/client';
 
 describe('clearThreadState endpoint', () => {
   const mockBaseUrl = 'http://localhost:8000';
@@ -148,10 +148,10 @@ describe('clearThreadState endpoint', () => {
       await clearThreadState(context, threadId);
 
       expect(debugSpy).toHaveBeenCalledWith(
-        `AgentFlowClient: Clearing thread state for thread ${threadId}`
+        `TenxGraphClient: Clearing thread state for thread ${threadId}`
       );
       expect(infoSpy).toHaveBeenCalledWith(
-        `AgentFlowClient: Thread state cleared successfully for thread ${threadId}`,
+        `TenxGraphClient: Thread state cleared successfully for thread ${threadId}`,
         mockClearThreadStateResponse
       );
 
@@ -177,7 +177,7 @@ describe('clearThreadState endpoint', () => {
     });
   });
 
-  describe('AgentFlowClient.clearThreadState', () => {
+  describe('TenxGraphClient.clearThreadState', () => {
     it('should call clearThreadState endpoint with correct parameters', async () => {
       const fetchMock = vi.fn().mockResolvedValue({
         ok: true,
@@ -185,7 +185,7 @@ describe('clearThreadState endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
         timeout: 5000,
@@ -207,7 +207,7 @@ describe('clearThreadState endpoint', () => {
       global.fetch = fetchMock;
       const debugSpy = vi.spyOn(console, 'debug');
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
         timeout: 5000,

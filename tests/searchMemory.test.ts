@@ -762,10 +762,10 @@ describe('Search Memory Endpoint Tests', () => {
       await searchMemory(debugContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Searching memories with query:',
+        'TenxGraphClient: Searching memories with query:',
         'dark mode preferences'
       );
-      expect(consoleInfoSpy).toHaveBeenCalledWith('AgentFlowClient: Memory search successful', {
+      expect(consoleInfoSpy).toHaveBeenCalledWith('TenxGraphClient: Memory search successful', {
         query: 'dark mode preferences',
         results_count: 1,
       });
@@ -783,7 +783,7 @@ describe('Search Memory Endpoint Tests', () => {
       await expect(searchMemory(debugContext, mockRequest)).rejects.toThrow();
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Search memory failed:',
+        'TenxGraphClient: Search memory failed:',
         expect.any(Error)
       );
 

@@ -5,10 +5,10 @@
  * to understand and work with the AgentState structure.
  */
 
-import { AgentFlowClient } from '../src/client';
+import { TenxGraphClient } from '../src/client';
 import type { AgentStateSchema, FieldSchema } from '../src/endpoints/stateSchema';
 
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
   debug: false,
 });

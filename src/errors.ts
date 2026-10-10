@@ -1,5 +1,5 @@
 /**
- * Error handling for AgentFlow API
+ * Error handling for 10xGraph API
  * Provides structured error types for all HTTP status codes
  */
 
@@ -24,9 +24,9 @@ export interface ApiErrorResponse {
 }
 
 /**
- * Base error class for all AgentFlow API errors
+ * Base error class for all 10xGraph API errors
  */
-export class AgentFlowError extends Error {
+export class TenxGraphError extends Error {
   public readonly statusCode: number;
   public readonly errorCode: string;
   public readonly requestId: string;
@@ -50,7 +50,7 @@ export class AgentFlowError extends Error {
     recoverySuggestion?: string
   ) {
     super(message);
-    this.name = 'AgentFlowError';
+    this.name = 'TenxGraphError';
     this.statusCode = statusCode;
     this.errorCode = errorCode;
     this.requestId = requestId;
@@ -108,7 +108,7 @@ export class AgentFlowError extends Error {
  * 400 Bad Request Error
  * Thrown when the request is malformed or contains invalid data
  */
-export class BadRequestError extends AgentFlowError {
+export class BadRequestError extends TenxGraphError {
   constructor(message: string, requestId: string, timestamp: string, details: ErrorDetail[] = []) {
     super(message, 400, 'BAD_REQUEST', requestId, timestamp, details);
     this.name = 'BadRequestError';
@@ -119,7 +119,7 @@ export class BadRequestError extends AgentFlowError {
  * 401 Unauthorized Error
  * Thrown when authentication credentials are missing or invalid
  */
-export class AuthenticationError extends AgentFlowError {
+export class AuthenticationError extends TenxGraphError {
   constructor(message: string, requestId: string, timestamp: string, details: ErrorDetail[] = []) {
     super(message, 401, 'AUTHENTICATION_FAILED', requestId, timestamp, details);
     this.name = 'AuthenticationError';
@@ -130,7 +130,7 @@ export class AuthenticationError extends AgentFlowError {
  * 403 Forbidden Error
  * Thrown when the user doesn't have permission to access the resource
  */
-export class PermissionError extends AgentFlowError {
+export class PermissionError extends TenxGraphError {
   constructor(message: string, requestId: string, timestamp: string, details: ErrorDetail[] = []) {
     super(message, 403, 'PERMISSION_ERROR', requestId, timestamp, details);
     this.name = 'PermissionError';
@@ -141,7 +141,7 @@ export class PermissionError extends AgentFlowError {
  * 404 Not Found Error
  * Thrown when the requested resource doesn't exist
  */
-export class NotFoundError extends AgentFlowError {
+export class NotFoundError extends TenxGraphError {
   constructor(message: string, requestId: string, timestamp: string, details: ErrorDetail[] = []) {
     super(message, 404, 'RESOURCE_NOT_FOUND', requestId, timestamp, details);
     this.name = 'NotFoundError';
@@ -152,7 +152,7 @@ export class NotFoundError extends AgentFlowError {
  * 422 Validation Error
  * Thrown when the request data fails validation
  */
-export class ValidationError extends AgentFlowError {
+export class ValidationError extends TenxGraphError {
   constructor(message: string, requestId: string, timestamp: string, details: ErrorDetail[] = []) {
     super(message, 422, 'VALIDATION_ERROR', requestId, timestamp, details);
     this.name = 'ValidationError';
@@ -163,7 +163,7 @@ export class ValidationError extends AgentFlowError {
  * 500 Server Error
  * Thrown when the server encounters an internal error
  */
-export class ServerError extends AgentFlowError {
+export class ServerError extends TenxGraphError {
   constructor(
     message: string,
     requestId: string,
@@ -181,7 +181,7 @@ export class ServerError extends AgentFlowError {
  * Graph Error
  * Thrown when there's an error in graph execution
  */
-export class GraphError extends AgentFlowError {
+export class GraphError extends TenxGraphError {
   constructor(
     message: string,
     requestId: string,
@@ -209,7 +209,7 @@ export class GraphError extends AgentFlowError {
  * Node Error
  * Thrown when there's an error executing a specific node
  */
-export class NodeError extends AgentFlowError {
+export class NodeError extends TenxGraphError {
   public readonly nodeName?: string;
 
   constructor(
@@ -241,7 +241,7 @@ export class NodeError extends AgentFlowError {
  * Graph Recursion Error
  * Thrown when graph execution exceeds the recursion limit
  */
-export class GraphRecursionError extends AgentFlowError {
+export class GraphRecursionError extends TenxGraphError {
   public readonly recursionLimit?: number;
 
   constructor(
@@ -273,7 +273,7 @@ export class GraphRecursionError extends AgentFlowError {
  * Storage Error
  * Thrown when there's an error accessing storage
  */
-export class StorageError extends AgentFlowError {
+export class StorageError extends TenxGraphError {
   constructor(
     message: string,
     requestId: string,
@@ -301,7 +301,7 @@ export class StorageError extends AgentFlowError {
  * Transient Storage Error
  * Thrown when there's a temporary storage issue (503 Service Unavailable)
  */
-export class TransientStorageError extends AgentFlowError {
+export class TransientStorageError extends TenxGraphError {
   constructor(
     message: string,
     requestId: string,
@@ -329,7 +329,7 @@ export class TransientStorageError extends AgentFlowError {
  * Metrics Error
  * Thrown when there's an error collecting or reporting metrics
  */
-export class MetricsError extends AgentFlowError {
+export class MetricsError extends TenxGraphError {
   constructor(
     message: string,
     requestId: string,
@@ -357,7 +357,7 @@ export class MetricsError extends AgentFlowError {
  * Schema Version Error
  * Thrown when there's a version mismatch in data schemas
  */
-export class SchemaVersionError extends AgentFlowError {
+export class SchemaVersionError extends TenxGraphError {
   public readonly expectedVersion?: string;
   public readonly actualVersion?: string;
 
@@ -392,7 +392,7 @@ export class SchemaVersionError extends AgentFlowError {
  * Serialization Error
  * Thrown when there's an error serializing or deserializing data
  */
-export class SerializationError extends AgentFlowError {
+export class SerializationError extends TenxGraphError {
   constructor(
     message: string,
     requestId: string,
@@ -440,7 +440,7 @@ export async function createErrorFromResponse(
   fallbackMessage?: string,
   endpoint?: string,
   method?: string
-): Promise<AgentFlowError> {
+): Promise<TenxGraphError> {
   const errorData = await parseErrorResponse(response);
 
   // If we successfully parsed the error response
@@ -496,7 +496,7 @@ export async function createErrorFromResponse(
           response.status
         );
       default:
-        return new AgentFlowError(
+        return new TenxGraphError(
           message,
           response.status,
           errorCode || 'UNKNOWN_ERROR',
@@ -538,7 +538,7 @@ export async function createErrorFromResponse(
         response.status
       );
     default:
-      return new AgentFlowError(
+      return new TenxGraphError(
         message,
         response.status,
         'UNKNOWN_ERROR',

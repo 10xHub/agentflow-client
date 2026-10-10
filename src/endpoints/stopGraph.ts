@@ -32,7 +32,7 @@ export async function stopGraph(
 ): Promise<StopGraphResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Stopping graph execution for thread:', request.thread_id);
+      console.debug('TenxGraphClient: Stopping graph execution for thread:', request.thread_id);
     }
 
     const controller = new AbortController();
@@ -52,7 +52,7 @@ export async function stopGraph(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Stop graph failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Stop graph failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Stop graph execution failed',
@@ -65,21 +65,21 @@ export async function stopGraph(
     const data: StopGraphResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Graph execution stopped successfully', data);
+      console.info('TenxGraphClient: Graph execution stopped successfully', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Stop graph failed:', error);
+      console.debug('TenxGraphClient: Stop graph failed:', error);
     }
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Stop graph timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Stop graph timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: Stop graph failed:', error);
+    console.error('TenxGraphClient: Stop graph failed:', error);
     throw error;
   }
 }

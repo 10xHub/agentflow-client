@@ -1,29 +1,29 @@
 import type { WebSocketImpl } from './ws.js';
 
-export interface AgentFlowBearerAuth {
+export interface TenxGraphBearerAuth {
   type: 'bearer';
   token: string;
 }
 
-export interface AgentFlowBasicAuth {
+export interface TenxGraphBasicAuth {
   type: 'basic';
   username: string;
   password: string;
 }
 
-export interface AgentFlowHeaderAuth {
+export interface TenxGraphHeaderAuth {
   type: 'header';
   name: string;
   value: string;
   prefix?: string | null;
 }
 
-export type AgentFlowAuth = AgentFlowBearerAuth | AgentFlowBasicAuth | AgentFlowHeaderAuth;
+export type TenxGraphAuth = TenxGraphBearerAuth | TenxGraphBasicAuth | TenxGraphHeaderAuth;
 
 export interface RequestContext {
   baseUrl: string;
   authToken?: string | null;
-  auth?: AgentFlowAuth | null;
+  auth?: TenxGraphAuth | null;
   headers?: HeadersInit;
   credentials?: RequestCredentials;
   timeout: number;
@@ -103,7 +103,7 @@ function encodeBase64(value: string): string {
   throw new Error('Basic authentication is not supported in this runtime');
 }
 
-function applyAuth(target: Record<string, string>, auth?: AgentFlowAuth | null): void {
+function applyAuth(target: Record<string, string>, auth?: TenxGraphAuth | null): void {
   if (!auth) {
     return;
   }
@@ -151,11 +151,11 @@ export function getRequestCredentials(
   return { credentials: context.credentials };
 }
 
-export function bearerAuth(token: string): AgentFlowBearerAuth {
+export function bearerAuth(token: string): TenxGraphBearerAuth {
   return { type: 'bearer', token };
 }
 
-export function basicAuth(username: string, password: string): AgentFlowBasicAuth {
+export function basicAuth(username: string, password: string): TenxGraphBasicAuth {
   return { type: 'basic', username, password };
 }
 
@@ -163,6 +163,6 @@ export function headerAuth(
   name: string,
   value: string,
   prefix?: string | null
-): AgentFlowHeaderAuth {
+): TenxGraphHeaderAuth {
   return { type: 'header', name, value, prefix };
 }

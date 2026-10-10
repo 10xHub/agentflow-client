@@ -1,11 +1,11 @@
-# AgentFlow React Example
+# 10xGraph React Example
 
-A simple React chat application demonstrating how to use the AgentFlow client library.
+A simple React chat application demonstrating how to use the 10xGraph client library.
 
 ## Prerequisites
 
 - Node.js 18+
-- An AgentFlow server running on `localhost:8000`
+- An 10xGraph API server running on `localhost:8000`
 
 ## Setup
 
@@ -16,7 +16,7 @@ cd react-example
 npm install
 ```
 
-2. Make sure your AgentFlow server is running on `http://localhost:8000`
+2. Make sure your 10xGraph API server is running on `http://localhost:8000`
 
 3. Start the development server:
 
@@ -28,20 +28,20 @@ npm run dev
 
 ## Features
 
-- **Real-time Chat**: Send messages and receive responses from the AgentFlow agent
+- **Real-time Chat**: Send messages and receive responses from the 10xGraph agent
 - **Streaming Support**: Toggle between streaming and non-streaming modes
 - **Connection Status**: Visual indicator showing server connectivity
 - **Modern UI**: Clean, dark-themed chat interface
 
 ## How it Works
 
-This example uses the `AgentFlowClient` from the `@10xscale/agentflow-client` package:
+This example uses the `TenxGraphClient` from the `10xgraph-client` package:
 
 ```javascript
-import { AgentFlowClient, Message } from '@10xscale/agentflow-client';
+import { TenxGraphClient, Message } from '10xgraph-client';
 
 // Create client
-const client = new AgentFlowClient({
+const client = new TenxGraphClient({
   baseUrl: 'http://localhost:8000',
   debug: true,
 });

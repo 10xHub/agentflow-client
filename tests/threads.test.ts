@@ -287,7 +287,7 @@ describe('Threads Endpoint Tests', () => {
 
       await threads(debugContext, { search: 'test', offset: 0, limit: 10 });
 
-      expect(consoleDebugSpy).toHaveBeenCalledWith('AgentFlowClient: Fetching threads list');
+      expect(consoleDebugSpy).toHaveBeenCalledWith('TenxGraphClient: Fetching threads list');
       expect(consoleDebugSpy).toHaveBeenCalledWith('  Search: test');
       expect(consoleDebugSpy).toHaveBeenCalledWith('  Offset: 0');
       expect(consoleDebugSpy).toHaveBeenCalledWith('  Limit: 10');
@@ -326,7 +326,7 @@ describe('Threads Endpoint Tests', () => {
       await expect(threads(mockContext)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Threads list fetch failed with HTTP 404'
+        'TenxGraphClient: Threads list fetch failed with HTTP 404'
       );
 
       consoleWarnSpy.mockRestore();
@@ -346,7 +346,7 @@ describe('Threads Endpoint Tests', () => {
       await expect(threads(slowContext)).rejects.toThrow();
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Threads list fetch timeout after 50ms'
+        'TenxGraphClient: Threads list fetch timeout after 50ms'
       );
 
       consoleWarnSpy.mockRestore();

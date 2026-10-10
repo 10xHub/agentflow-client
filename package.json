@@ -1,7 +1,7 @@
 {
-  "name": "@10xscale/agentflow-client",
-  "version": "0.5.0",
-  "description": "Final release under this name: the project continues as 10xGraph (https://10xgraph.com). TypeScript client for the 10xScale Agentflow API server: invoke and stream agent graphs, manage threads, memory and files, run client-side tools, and realtime audio.",
+  "name": "10xgraph-client",
+  "version": "0.6.0",
+  "description": "TypeScript client for the 10xGraph API server: invoke and stream agent graphs, manage threads, memory and files, run client-side tools, and realtime audio. Formerly @10xscale/agentflow-client.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -42,10 +42,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/10xHub/agentflow-client.git"
+    "url": "git+https://github.com/10xGraph/10xgraph-client.git"
   },
   "bugs": {
-    "url": "https://github.com/10xHub/agentflow-client/issues"
+    "url": "https://github.com/10xGraph/10xgraph-client/issues"
   },
   "homepage": "https://10xgraph.com",
   "devDependencies": {
@@ -63,9 +63,9 @@
     "vitest": "^3.2.7"
   },
   "keywords": [
-    "agentflow",
-    "10xscale",
     "10xgraph",
+    "10xscale",
+    "agentflow",
     "agent",
     "ai",
     "llm",

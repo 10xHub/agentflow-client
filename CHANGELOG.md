@@ -1,6 +1,7 @@
 # Changelog
 
-All notable changes to `@10xscale/agentflow-client` are documented here.
+All notable changes to `10xgraph-client` (formerly `@10xscale/agentflow-client`) are
+documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -15,6 +16,48 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Breaking changes are documented under a `### Breaking` heading**, with migration steps.
 - The package entry points (`main`, `module`, `types`, `exports`) are part of the contract.
   Changing them is a breaking change.
+
+---
+
+## [0.6.0] - Unreleased
+
+**First release as `10xgraph-client`.** The package formerly published as
+`@10xscale/agentflow-client` (last version 0.5.0) is renamed along with the project:
+Agentflow is now 10xGraph ([10xgraph.com](https://10xgraph.com),
+[github.com/10xGraph/10xgraph-client](https://github.com/10xGraph/10xgraph-client)).
+
+### Breaking
+
+- **WebSocket bearer auth uses the `10xgraph-bearer` subprotocol** (`WS_BEARER_SUBPROTOCOL`),
+  replacing `agentflow-bearer`. `10xgraph-api` 0.7.0 accepts both; an older
+  `10xscale-agentflow-cli` server only knows the old name, so `wsStream()` and `realtime()`
+  with bearer auth fail against it.
+
+  **Migration:** upgrade the server to `10xgraph-api` >= 0.7.0. HTTP endpoints are unaffected.
+
+- **`TenxGraphError.name` is `'TenxGraphError'`** (was `'AgentFlowError'`). Code that compares
+  `error.name` should use `instanceof` instead.
+
+### Changed
+
+- npm package renamed: `npm install 10xgraph-client`, `import { ... } from '10xgraph-client'`.
+- Exported names renamed: `TenxGraphClient`, `TenxGraphConfig`, `TenxGraphError`,
+  `TenxGraphAuth`, `TenxGraphBearerAuth`, `TenxGraphBasicAuth`, `TenxGraphHeaderAuth`.
+- Debug log prefix is `TenxGraphClient:`.
+- Docs, examples and package metadata point at [10xgraph.com/docs](https://10xgraph.com/docs/client),
+  the server's `10xgraph.json`, and the `10xGraph/10xgraph-client` repository.
+
+### Deprecated
+
+- `AgentFlowClient`, `AgentFlowConfig`, `AgentFlowError`, `AgentFlowAuth`,
+  `AgentFlowBearerAuth`, `AgentFlowBasicAuth`, `AgentFlowHeaderAuth`. Each is exported from
+  `src/compat.ts` as an alias of the same class or type, so existing code and `instanceof`
+  checks keep working. Removed in 2.0.
+
+### Compatibility
+
+Requires `10xgraph-api` >= 0.7.0 for WebSocket bearer auth; verified against its current route
+table (every endpoint the client calls exists with the same method, path and body).
 
 ---
 
@@ -226,6 +269,7 @@ Initial entry in this changelog. Releases before `0.2.0` were not tracked here.
 - Added the realtime audio client (`client.realtime(...)` returning `RealtimeSession`).
 - Added dual ESM/CJS exports.
 
+[0.6.0]: https://github.com/10xGraph/10xgraph-client/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/10xHub/agentflow-client/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/10xHub/agentflow-client/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/10xHub/agentflow-client/compare/v-0.2.0...v0.3.0

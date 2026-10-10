@@ -254,11 +254,11 @@ describe('Thread Messages Endpoint Tests', () => {
       await checkpointMessages(debugContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Fetching thread messages for thread',
+        'TenxGraphClient: Fetching thread messages for thread',
         5
       );
       expect(consoleInfoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Thread messages fetched successfully',
+        'TenxGraphClient: Thread messages fetched successfully',
         mockResponse
       );
     });

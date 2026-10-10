@@ -41,7 +41,7 @@ export async function storeMemory(
 ): Promise<StoreMemoryResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Storing memory with type', request.memory_type);
+      console.debug('TenxGraphClient: Storing memory with type', request.memory_type);
     }
 
     const controller = new AbortController();
@@ -72,7 +72,7 @@ export async function storeMemory(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Store memory failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Store memory failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Store memory request failed',
@@ -85,13 +85,13 @@ export async function storeMemory(
     const data: StoreMemoryResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Memory stored successfully', data);
+      console.info('TenxGraphClient: Memory stored successfully', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Store memory failed:', error);
+      console.debug('TenxGraphClient: Store memory failed:', error);
     }
     throw error;
   }

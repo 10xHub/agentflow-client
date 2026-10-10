@@ -26,7 +26,7 @@ export async function deleteThread(
 ): Promise<DeleteThreadResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Deleting thread', `thread: ${request.threadId}`);
+      console.debug('TenxGraphClient: Deleting thread', `thread: ${request.threadId}`);
     }
 
     const controller = new AbortController();
@@ -48,7 +48,7 @@ export async function deleteThread(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Delete thread failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Delete thread failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Delete thread failed',
@@ -61,17 +61,17 @@ export async function deleteThread(
     const data: DeleteThreadResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Thread deleted successfully', data);
+      console.info('TenxGraphClient: Thread deleted successfully', data);
     }
 
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Delete thread timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Delete thread timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
     if (context.debug) {
-      console.debug('AgentFlowClient: Delete thread failed:', error);
+      console.debug('TenxGraphClient: Delete thread failed:', error);
     }
     throw error;
   }

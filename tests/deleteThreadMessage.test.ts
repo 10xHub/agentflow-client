@@ -170,7 +170,7 @@ describe('Delete Thread Message Endpoint Tests', () => {
 
       expect(debugSpy).toHaveBeenCalled();
       expect(infoSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Thread message deleted successfully',
+        'TenxGraphClient: Thread message deleted successfully',
         mockResponse
       );
     });

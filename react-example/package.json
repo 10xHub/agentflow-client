@@ -1,5 +1,5 @@
 {
-  "name": "agentflow-react-example",
+  "name": "10xgraph-react-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@10xscale/agentflow-client": "file:.."
+    "10xgraph-client": "file:.."
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

@@ -20,7 +20,7 @@ export async function threadState(
 ): Promise<ThreadStateResponse> {
   try {
     if (context.debug) {
-      console.debug(`AgentFlowClient: Fetching thread state for thread ${threadId}`);
+      console.debug(`TenxGraphClient: Fetching thread state for thread ${threadId}`);
     }
 
     const controller = new AbortController();
@@ -39,7 +39,7 @@ export async function threadState(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Thread state fetch failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Thread state fetch failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Thread state fetch failed',
@@ -53,7 +53,7 @@ export async function threadState(
 
     if (context.debug) {
       console.info(
-        `AgentFlowClient: Thread state fetched successfully for thread ${threadId}`,
+        `TenxGraphClient: Thread state fetched successfully for thread ${threadId}`,
         data
       );
     }
@@ -61,12 +61,12 @@ export async function threadState(
     return data;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Thread state fetch timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Thread state fetch timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
     if (context.debug) {
-      console.debug(`AgentFlowClient: Thread state fetch failed:`, error);
+      console.debug(`TenxGraphClient: Thread state fetch failed:`, error);
     }
 
     throw error;

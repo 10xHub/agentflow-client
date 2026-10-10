@@ -27,7 +27,7 @@ export async function threadMessage(
   try {
     if (context.debug) {
       console.debug(
-        'AgentFlowClient: Fetching thread message',
+        'TenxGraphClient: Fetching thread message',
         `thread: ${request.threadId}`,
         `message: ${request.messageId}`
       );
@@ -50,7 +50,7 @@ export async function threadMessage(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Thread message fetch failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Thread message fetch failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Thread message fetch failed',
@@ -63,13 +63,13 @@ export async function threadMessage(
     const data: ThreadMessageResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Thread message fetched successfully', data);
+      console.info('TenxGraphClient: Thread message fetched successfully', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Thread message fetch failed:', error);
+      console.debug('TenxGraphClient: Thread message fetch failed:', error);
     }
     throw error;
   }

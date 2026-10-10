@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RealtimeSession } from '../src/endpoints/realtime.js';
-import { AgentFlowClient } from '../src/client.js';
+import { TenxGraphClient } from '../src/client.js';
 
 // ── Minimal controllable WebSocket mock ──────────────────────────────────────
 class MockWS {
@@ -74,7 +74,7 @@ describe('RealtimeSession transport', () => {
     newSession();
     const ws = MockWS.instances[0];
     expect(ws.url).toBe('ws://localhost:8000/v1/graph/live');
-    expect(ws.protocols).toEqual(['agentflow-bearer', 'tok']);
+    expect(ws.protocols).toEqual(['10xgraph-bearer', 'tok']);
   });
 
   it('sends the init frame as JSON once open, and resolves ready', async () => {
@@ -301,7 +301,7 @@ describe('RealtimeSession reconnect', () => {
   });
 });
 
-describe('AgentFlowClient.realtime', () => {
+describe('TenxGraphClient.realtime', () => {
   beforeEach(() => {
     MockWS.instances = [];
   });
@@ -310,7 +310,7 @@ describe('AgentFlowClient.realtime', () => {
   });
 
   it('opens a RealtimeSession against /v1/graph/live using config auth', () => {
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       authToken: 'tok',
       webSocketImpl: MockWS as any,
@@ -318,7 +318,7 @@ describe('AgentFlowClient.realtime', () => {
     const session = client.realtime({ model: 'm', thread_id: 't1' });
     const ws = MockWS.instances[0];
     expect(ws.url).toBe('ws://localhost:8000/v1/graph/live');
-    expect(ws.protocols).toEqual(['agentflow-bearer', 'tok']);
+    expect(ws.protocols).toEqual(['10xgraph-bearer', 'tok']);
     expect(session.threadId).toBe('t1');
   });
 });

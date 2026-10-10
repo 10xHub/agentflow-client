@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { AgentFlowClient } from '../src/index';
+import { TenxGraphClient } from '../src/index';
 import type { PingResponse, GraphResponse } from '../src/index';
 
-describe('AgentFlow API Tests', () => {
-  const client = new AgentFlowClient({
+describe('10xGraph API Tests', () => {
+  const client = new TenxGraphClient({
     baseUrl: 'http://localhost:8000',
     debug: true,
   });
@@ -76,7 +76,7 @@ describe('AgentFlow API Tests', () => {
 
   describe('Client Configuration', () => {
     it('should accept timeout and auth token', () => {
-      const configuredClient = new AgentFlowClient({
+      const configuredClient = new TenxGraphClient({
         baseUrl: 'http://localhost:8000',
         authToken: 'test-token',
         timeout: 5000,

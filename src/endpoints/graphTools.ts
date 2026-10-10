@@ -38,7 +38,7 @@ export interface GraphToolsResponse {
 export async function graphTools(context: GraphToolsContext): Promise<GraphToolsResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching graph tools from', context.baseUrl);
+      console.debug('TenxGraphClient: Fetching graph tools from', context.baseUrl);
     }
 
     const controller = new AbortController();
@@ -57,7 +57,7 @@ export async function graphTools(context: GraphToolsContext): Promise<GraphTools
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Graph tools fetch failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Graph tools fetch failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'Graph tools fetch failed',
@@ -70,21 +70,21 @@ export async function graphTools(context: GraphToolsContext): Promise<GraphTools
     const data: GraphToolsResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Graph tools fetch successful', data);
+      console.info('TenxGraphClient: Graph tools fetch successful', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Graph tools fetch failed:', error);
+      console.debug('TenxGraphClient: Graph tools fetch failed:', error);
     }
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Graph tools fetch timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Graph tools fetch timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: Graph tools fetch failed:', error);
+    console.error('TenxGraphClient: Graph tools fetch failed:', error);
     throw error;
   }
 }

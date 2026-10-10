@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  AgentFlowError,
+  TenxGraphError,
   BadRequestError,
   AuthenticationError,
   PermissionError,
@@ -13,9 +13,9 @@ import {
 } from '../src/errors.js';
 
 describe('Error Classes', () => {
-  describe('AgentFlowError', () => {
+  describe('TenxGraphError', () => {
     it('should create base error with all properties', () => {
-      const error = new AgentFlowError(
+      const error = new TenxGraphError(
         'Test error',
         400,
         'TEST_ERROR',
@@ -25,7 +25,7 @@ describe('Error Classes', () => {
       );
 
       expect(error).toBeInstanceOf(Error);
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error.message).toBe('Test error');
       expect(error.statusCode).toBe(400);
       expect(error.errorCode).toBe('TEST_ERROR');
@@ -36,8 +36,8 @@ describe('Error Classes', () => {
     });
 
     it('should have proper name', () => {
-      const error = new AgentFlowError('Test', 400, 'TEST', 'req-1', '2025-10-26T12:00:00Z');
-      expect(error.name).toBe('AgentFlowError');
+      const error = new TenxGraphError('Test', 400, 'TEST', 'req-1', '2025-10-26T12:00:00Z');
+      expect(error.name).toBe('TenxGraphError');
     });
   });
 
@@ -45,7 +45,7 @@ describe('Error Classes', () => {
     it('should create 400 error', () => {
       const error = new BadRequestError('Invalid input', 'req-123', '2025-10-26T12:00:00Z');
 
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error).toBeInstanceOf(BadRequestError);
       expect(error.name).toBe('BadRequestError');
       expect(error.statusCode).toBe(400);
@@ -70,7 +70,7 @@ describe('Error Classes', () => {
         '2025-10-26T12:00:00Z'
       );
 
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error).toBeInstanceOf(AuthenticationError);
       expect(error.name).toBe('AuthenticationError');
       expect(error.statusCode).toBe(401);
@@ -86,7 +86,7 @@ describe('Error Classes', () => {
         '2025-10-26T12:00:00Z'
       );
 
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error).toBeInstanceOf(PermissionError);
       expect(error.name).toBe('PermissionError');
       expect(error.statusCode).toBe(403);
@@ -98,7 +98,7 @@ describe('Error Classes', () => {
     it('should create 404 error', () => {
       const error = new NotFoundError('Resource not found', 'req-123', '2025-10-26T12:00:00Z');
 
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error).toBeInstanceOf(NotFoundError);
       expect(error.name).toBe('NotFoundError');
       expect(error.statusCode).toBe(404);
@@ -122,7 +122,7 @@ describe('Error Classes', () => {
         details
       );
 
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error).toBeInstanceOf(ValidationError);
       expect(error.name).toBe('ValidationError');
       expect(error.statusCode).toBe(422);
@@ -135,7 +135,7 @@ describe('Error Classes', () => {
     it('should create 500 error', () => {
       const error = new ServerError('Internal server error', 'req-123', '2025-10-26T12:00:00Z');
 
-      expect(error).toBeInstanceOf(AgentFlowError);
+      expect(error).toBeInstanceOf(TenxGraphError);
       expect(error).toBeInstanceOf(ServerError);
       expect(error.name).toBe('ServerError');
       expect(error.statusCode).toBe(500);
@@ -416,7 +416,7 @@ describe('createErrorFromResponse', () => {
     });
 
     const error = await createErrorFromResponse(response);
-    expect(error).toBeInstanceOf(AgentFlowError);
+    expect(error).toBeInstanceOf(TenxGraphError);
     expect(error.statusCode).toBe(418);
     expect(error.errorCode).toBe('UNKNOWN_ERROR');
   });

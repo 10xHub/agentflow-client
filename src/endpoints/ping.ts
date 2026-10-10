@@ -12,7 +12,7 @@ export interface PingResponse {
 export async function ping(context: PingContext): Promise<PingResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Pinging server at', context.baseUrl);
+      console.debug('TenxGraphClient: Pinging server at', context.baseUrl);
     }
 
     const controller = new AbortController();
@@ -30,7 +30,7 @@ export async function ping(context: PingContext): Promise<PingResponse> {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: Ping failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: Ping failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(response, 'Ping request failed', '/ping', 'GET');
       throw error;
     }
@@ -38,21 +38,21 @@ export async function ping(context: PingContext): Promise<PingResponse> {
     const data: PingResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: Ping successful', data);
+      console.info('TenxGraphClient: Ping successful', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: Ping failed:', error);
+      console.debug('TenxGraphClient: Ping failed:', error);
     }
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: Ping timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: Ping timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: Ping failed:', error);
+    console.error('TenxGraphClient: Ping failed:', error);
     throw error;
   }
 }

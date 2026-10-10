@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { threadDetails } from '../src/endpoints/threadDetails';
 import type { ThreadDetailsResponse } from '../src/endpoints/threadDetails';
-import { AgentFlowClient } from '../src/client';
+import { TenxGraphClient } from '../src/client';
 
 describe('threadDetails endpoint', () => {
   const mockBaseUrl = 'http://localhost:8000';
@@ -188,7 +188,7 @@ describe('threadDetails endpoint', () => {
     });
   });
 
-  describe('AgentFlowClient.threadDetails', () => {
+  describe('TenxGraphClient.threadDetails', () => {
     it('should call the threadDetails endpoint with correct parameters', async () => {
       const fetchMock = vi.fn().mockResolvedValue({
         ok: true,
@@ -196,7 +196,7 @@ describe('threadDetails endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
         timeout: 5000,
@@ -219,7 +219,7 @@ describe('threadDetails endpoint', () => {
       });
       global.fetch = fetchMock;
 
-      const client = new AgentFlowClient({
+      const client = new TenxGraphClient({
         baseUrl: mockBaseUrl,
         authToken: 'test-token',
       });

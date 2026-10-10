@@ -443,7 +443,7 @@ describe('List Memories Endpoint Tests', () => {
       await expect(listMemories(mockContext, mockRequest)).rejects.toThrow();
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: List memories failed:',
+        'TenxGraphClient: List memories failed:',
         expect.any(Error)
       );
 
@@ -490,7 +490,7 @@ describe('List Memories Endpoint Tests', () => {
       await listMemories(mockContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Fetching list of memories',
+        'TenxGraphClient: Fetching list of memories',
         expect.objectContaining({ limit: 100 })
       );
 
@@ -525,7 +525,7 @@ describe('List Memories Endpoint Tests', () => {
       await listMemories(mockContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: List memories request payload:',
+        'TenxGraphClient: List memories request payload:',
         expect.stringContaining('75')
       );
 
@@ -561,7 +561,7 @@ describe('List Memories Endpoint Tests', () => {
     });
   });
 
-  describe('Integration with AgentFlowClient', () => {
+  describe('Integration with TenxGraphClient', () => {
     it('should properly integrate with client context', async () => {
       const mockResponse: ListMemoriesResponse = {
         data: {

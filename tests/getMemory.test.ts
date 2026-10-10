@@ -692,10 +692,10 @@ describe('Get Memory Endpoint Tests', () => {
       await getMemory(debugContext, mockRequest);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Fetching memory with ID:',
+        'TenxGraphClient: Fetching memory with ID:',
         '56565'
       );
-      expect(consoleInfoSpy).toHaveBeenCalledWith('AgentFlowClient: Memory fetched successfully', {
+      expect(consoleInfoSpy).toHaveBeenCalledWith('TenxGraphClient: Memory fetched successfully', {
         memory_id: '56565',
         content: 'User prefers dark mode for all interfaces',
       });
@@ -713,7 +713,7 @@ describe('Get Memory Endpoint Tests', () => {
       await expect(getMemory(debugContext, mockRequest)).rejects.toThrow();
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Get memory failed:',
+        'TenxGraphClient: Get memory failed:',
         expect.any(Error)
       );
 

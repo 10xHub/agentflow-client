@@ -110,34 +110,34 @@ describe('File Endpoint Types', () => {
 // ---------------------------------------------------------------------------
 // Sprint 5.2: Client file methods
 // ---------------------------------------------------------------------------
-describe('AgentFlowClient file methods', () => {
+describe('TenxGraphClient file methods', () => {
   it('should have uploadFile method', async () => {
-    const { AgentFlowClient } = await import('../src/client');
-    const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+    const { TenxGraphClient } = await import('../src/client');
+    const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000' });
     expect(typeof client.uploadFile).toBe('function');
   });
 
   it('should have getFile method', async () => {
-    const { AgentFlowClient } = await import('../src/client');
-    const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+    const { TenxGraphClient } = await import('../src/client');
+    const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000' });
     expect(typeof client.getFile).toBe('function');
   });
 
   it('should have getFileInfo method', async () => {
-    const { AgentFlowClient } = await import('../src/client');
-    const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+    const { TenxGraphClient } = await import('../src/client');
+    const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000' });
     expect(typeof client.getFileInfo).toBe('function');
   });
 
   it('should have getFileAccessUrl method', async () => {
-    const { AgentFlowClient } = await import('../src/client');
-    const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+    const { TenxGraphClient } = await import('../src/client');
+    const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000' });
     expect(typeof client.getFileAccessUrl).toBe('function');
   });
 
   it('should have getMultimodalConfig method', async () => {
-    const { AgentFlowClient } = await import('../src/client');
-    const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000' });
+    const { TenxGraphClient } = await import('../src/client');
+    const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000' });
     expect(typeof client.getMultimodalConfig).toBe('function');
   });
 });

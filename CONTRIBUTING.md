@@ -1,4 +1,4 @@
-# Contributing to @10xscale/agentflow-client
+# Contributing to 10xgraph-client
 
 Thanks for helping out. This covers setup, the checks your change has to pass, and what we
 look for in a pull request.
@@ -8,18 +8,18 @@ By participating you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md)
 ## Scope of this package
 
 This is the **TypeScript client SDK**. It talks to the server in
-[`agentflow-api`](https://github.com/10xHub/agentflow/tree/main/agentflow-api). If your
+[`10xgraph-api`](https://github.com/10xGraph/10xgraph-api). If your
 change is about how the server behaves rather than how the client calls it, it belongs
 there. If it is about graph execution, it belongs in the core
-[`10xscale-agentflow`](https://github.com/10xHub/agentflow) package.
+[`10xgraph`](https://github.com/10xGraph/10xGraph) package.
 
 ## Setup
 
 Requires Node 18 or newer.
 
 ```bash
-git clone https://github.com/10xHub/agentflow.git
-cd agentflow/agentflow-client
+git clone https://github.com/10xGraph/10xgraph-client.git
+cd 10xgraph-client
 npm ci
 ```
 
@@ -112,5 +112,5 @@ deliberate manual `npm publish`.
 
 ## License
 
-Agentflow is [MIT licensed](LICENSE) and made by [10xScale](https://10xscale.ai). Contributions
+10xGraph is [MIT licensed](LICENSE) and made by [10xScale](https://10xscale.ai). Contributions
 are accepted under the same license.

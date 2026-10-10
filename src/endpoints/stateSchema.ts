@@ -54,7 +54,7 @@ export interface StateSchemaResponse {
 export async function stateSchema(context: StateSchemaContext): Promise<StateSchemaResponse> {
   try {
     if (context.debug) {
-      console.debug('AgentFlowClient: Fetching state schema from', context.baseUrl);
+      console.debug('TenxGraphClient: Fetching state schema from', context.baseUrl);
     }
 
     const controller = new AbortController();
@@ -73,7 +73,7 @@ export async function stateSchema(context: StateSchemaContext): Promise<StateSch
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`AgentFlowClient: State schema fetch failed with HTTP ${response.status}`);
+      console.warn(`TenxGraphClient: State schema fetch failed with HTTP ${response.status}`);
       const error = await createErrorFromResponse(
         response,
         'State schema fetch failed',
@@ -86,21 +86,21 @@ export async function stateSchema(context: StateSchemaContext): Promise<StateSch
     const data: StateSchemaResponse = await response.json();
 
     if (context.debug) {
-      console.info('AgentFlowClient: State schema fetch successful', data);
+      console.info('TenxGraphClient: State schema fetch successful', data);
     }
 
     return data;
   } catch (error) {
     if (context.debug) {
-      console.debug('AgentFlowClient: State schema fetch failed:', error);
+      console.debug('TenxGraphClient: State schema fetch failed:', error);
     }
 
     if ((error as Error).name === 'AbortError') {
-      console.warn(`AgentFlowClient: State schema fetch timeout after ${context.timeout}ms`);
+      console.warn(`TenxGraphClient: State schema fetch timeout after ${context.timeout}ms`);
       throw new Error(`Request timeout after ${context.timeout}ms`);
     }
 
-    console.error('AgentFlowClient: State schema fetch failed:', error);
+    console.error('TenxGraphClient: State schema fetch failed:', error);
     throw error;
   }
 }

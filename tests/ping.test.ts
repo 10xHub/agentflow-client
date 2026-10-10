@@ -197,10 +197,10 @@ describe('Ping Endpoint Tests', () => {
       await ping(debugContext);
 
       expect(consoleDebugSpy).toHaveBeenCalledWith(
-        'AgentFlowClient: Pinging server at',
+        'TenxGraphClient: Pinging server at',
         'http://localhost:8000'
       );
-      expect(consoleInfoSpy).toHaveBeenCalledWith('AgentFlowClient: Ping successful', mockResponse);
+      expect(consoleInfoSpy).toHaveBeenCalledWith('TenxGraphClient: Ping successful', mockResponse);
     });
 
     it('should log error messages when debug is enabled', async () => {
@@ -214,7 +214,7 @@ describe('Ping Endpoint Tests', () => {
 
       await expect(ping(debugContext)).rejects.toThrow();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AgentFlowClient: Ping failed with HTTP 404');
+      expect(consoleWarnSpy).toHaveBeenCalledWith('TenxGraphClient: Ping failed with HTTP 404');
     });
 
     it('should log timeout messages when debug is enabled', async () => {
@@ -226,7 +226,7 @@ describe('Ping Endpoint Tests', () => {
 
       await expect(ping(debugContext)).rejects.toThrow();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AgentFlowClient: Ping timeout after 5000ms');
+      expect(consoleWarnSpy).toHaveBeenCalledWith('TenxGraphClient: Ping timeout after 5000ms');
     });
 
     it('should not log when debug is disabled', async () => {

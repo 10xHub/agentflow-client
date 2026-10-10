@@ -5,6 +5,41 @@ Human-facing notes for the current release. For the full history see
 
 ---
 
+## 0.6.0: `@10xscale/agentflow-client` is now `10xgraph-client`
+
+Same client, new name. Agentflow is now **10xGraph**, and the npm package follows:
+
+```bash
+npm uninstall @10xscale/agentflow-client
+npm install 10xgraph-client
+```
+
+```typescript
+// before
+import { AgentFlowClient } from '@10xscale/agentflow-client';
+// after
+import { TenxGraphClient } from '10xgraph-client';
+```
+
+Changing the import is enough. `AgentFlowClient`, `AgentFlowError`, `AgentFlowConfig` and the
+`AgentFlowAuth` types are still exported as deprecated aliases of the new `TenxGraph*` names,
+so `instanceof AgentFlowError` keeps working. They are removed in 2.0.
+
+### Upgrade the server for WebSockets
+
+WebSocket bearer auth (`wsStream()`, `realtime()`) now offers the `10xgraph-bearer`
+subprotocol. `10xgraph-api` 0.7.0 accepts it; older `10xscale-agentflow-cli` servers do not.
+HTTP endpoints work against both.
+
+### Smaller changes
+
+- `error.name` is `'TenxGraphError'` for the base error class. Prefer `instanceof`.
+- Debug logs are prefixed `TenxGraphClient:`.
+- Docs moved to [10xgraph.com/docs](https://10xgraph.com/docs/client); the repository is
+  [10xGraph/10xgraph-client](https://github.com/10xGraph/10xgraph-client).
+
+---
+
 ## 0.5.0: the final release of `@10xscale/agentflow-client`
 
 Agentflow is now **10xGraph**. The project continues under a new name because

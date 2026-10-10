@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { AgentFlowClient } from '../src/client';
+import { TenxGraphClient } from '../src/client';
 import { Message } from '../src/message';
 import { ToolRegistration } from '../src/tools';
 
@@ -37,7 +37,7 @@ describe('Invoke with Tool Execution', () => {
       json: async () => mockResponse,
     });
 
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       debug: false,
     });
@@ -130,7 +130,7 @@ describe('Invoke with Tool Execution', () => {
         json: async () => secondResponse,
       });
 
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       debug: false,
     });
@@ -191,7 +191,7 @@ describe('Invoke with Tool Execution', () => {
       handler: async () => ({ result: 'ok' }),
     };
 
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       debug: false,
     });
@@ -283,7 +283,7 @@ describe('Invoke with Tool Execution', () => {
         json: async () => secondResponse,
       });
 
-    const client = new AgentFlowClient({
+    const client = new TenxGraphClient({
       baseUrl: 'http://localhost:8000',
       debug: false,
     });

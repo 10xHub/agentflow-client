@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { AgentFlowClient } from '../src/index';
+import { TenxGraphClient } from '../src/index';
 import type { FixGraphResponse } from '../src/index';
 
 describe('Fix Graph API Tests', () => {
-  const client = new AgentFlowClient({
+  const client = new TenxGraphClient({
     baseUrl: 'http://localhost:8000',
     debug: true,
   });
@@ -160,7 +160,7 @@ describe('Fix Graph API Tests', () => {
 
   describe('Client Configuration', () => {
     it('should respect client timeout', async () => {
-      const shortTimeoutClient = new AgentFlowClient({
+      const shortTimeoutClient = new TenxGraphClient({
         baseUrl: 'http://localhost:8000',
         timeout: 100, // Very short timeout
         debug: true,
@@ -175,7 +175,7 @@ describe('Fix Graph API Tests', () => {
     });
 
     it('should include auth token if provided', async () => {
-      const authClient = new AgentFlowClient({
+      const authClient = new TenxGraphClient({
         baseUrl: 'http://localhost:8000',
         authToken: 'test-bearer-token',
         debug: true,

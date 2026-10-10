@@ -46,7 +46,7 @@ function hasRemoteToolCalls(messages: Message[]): boolean {
  *
  * The protocol is:
  *
- *   1. Connect to ``/v1/graph/ws`` (auth via the ``agentflow-bearer`` subprotocol or Authorization header).
+ *   1. Connect to ``/v1/graph/ws`` (auth via the ``10xgraph-bearer`` subprotocol or Authorization header).
  *   2. Send ``{ invoke_type:"fresh", messages:[…], config:{…}, … }``.
  *   3. Receive ``StreamChunk`` JSON messages; yield each to the caller.
  *   4. Server sends ``{ event:"updates", data:{ status:"done" } }`` after each run.
@@ -73,7 +73,7 @@ export async function* wsStreamInvoke(
   const url = buildWsUrl(context, '/v1/graph/ws');
 
   if (context.debug) {
-    console.debug('AgentFlowClient [WS]: connecting to', url);
+    console.debug('TenxGraphClient [WS]: connecting to', url);
   }
 
   const ws = openWebSocket(url, context);
@@ -108,7 +108,7 @@ export async function* wsStreamInvoke(
       enqueue(chunk);
     } catch (e) {
       if (context.debug) {
-        console.warn('AgentFlowClient [WS]: failed to parse chunk:', e);
+        console.warn('TenxGraphClient [WS]: failed to parse chunk:', e);
       }
     }
   });
@@ -119,7 +119,7 @@ export async function* wsStreamInvoke(
 
   ws.addEventListener('close', (event: CloseEvent) => {
     if (context.debug) {
-      console.debug('AgentFlowClient [WS]: connection closed, code=', event.code);
+      console.debug('TenxGraphClient [WS]: connection closed, code=', event.code);
     }
     enqueue('close');
   });
@@ -139,7 +139,7 @@ export async function* wsStreamInvoke(
   });
 
   if (context.debug) {
-    console.debug('AgentFlowClient [WS]: connected');
+    console.debug('TenxGraphClient [WS]: connected');
   }
 
   // ── Main loop ─────────────────────────────────────────────────────────────
@@ -158,7 +158,7 @@ export async function* wsStreamInvoke(
     outerLoop: while (true) {
       if (context.debug) {
         console.debug(
-          `AgentFlowClient [WS]: sending ${nextPayload.invoke_type} request, thread_id=${threadId ?? 'new'}`
+          `TenxGraphClient [WS]: sending ${nextPayload.invoke_type} request, thread_id=${threadId ?? 'new'}`
         );
       }
 
@@ -206,21 +206,21 @@ export async function* wsStreamInvoke(
 
       if (context.debug) {
         console.debug(
-          `AgentFlowClient [WS]: run complete, ${runMessages.length} messages collected`
+          `TenxGraphClient [WS]: run complete, ${runMessages.length} messages collected`
         );
       }
 
       // ── Tool-call detection & resume ──────────────────────────────────
       if (hasRemoteToolCalls(runMessages) && context.toolExecutor) {
         if (context.debug) {
-          console.debug('AgentFlowClient [WS]: remote tool calls detected, executing…');
+          console.debug('TenxGraphClient [WS]: remote tool calls detected, executing…');
         }
 
         const toolResults = await context.toolExecutor.executeToolCalls(runMessages);
 
         if (context.debug) {
           console.debug(
-            `AgentFlowClient [WS]: ${toolResults.length} tool result(s) ready, resuming`
+            `TenxGraphClient [WS]: ${toolResults.length} tool result(s) ready, resuming`
           );
         }
 
@@ -245,7 +245,7 @@ export async function* wsStreamInvoke(
     }
 
     if (context.debug) {
-      console.debug('AgentFlowClient [WS]: stream finished');
+      console.debug('TenxGraphClient [WS]: stream finished');
     }
   }
 }

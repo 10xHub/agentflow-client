@@ -5,7 +5,7 @@ import type {
   StateSchemaResponse,
   AgentStateSchema,
 } from '../src/endpoints/stateSchema';
-import { AgentFlowClient } from '../src';
+import { TenxGraphClient } from '../src';
 
 // Mock fetch globally
 const fetchMock = vi.fn();
@@ -170,8 +170,8 @@ describe('State Schema Endpoint Tests', () => {
   });
 
   describe('Client integration', () => {
-    it('AgentFlowClient.graphStateSchema exists and calls endpoint', async () => {
-      const client = new AgentFlowClient({ baseUrl: 'http://localhost:8000', debug: false });
+    it('TenxGraphClient.graphStateSchema exists and calls endpoint', async () => {
+      const client = new TenxGraphClient({ baseUrl: 'http://localhost:8000', debug: false });
 
       const mockSchema: AgentStateSchema = {
         title: 'AgentState',
