@@ -19,7 +19,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [0.6.0] - Unreleased
+## [0.6.0] - 2026-10-10
 
 **First release as `10xgraph-client`.** The package formerly published as
 `@10xscale/agentflow-client` (last version 0.5.0) is renamed along with the project:

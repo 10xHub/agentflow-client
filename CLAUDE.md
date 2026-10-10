@@ -6,7 +6,7 @@ API server it talks to, see `agentflow-api/CLAUDE.md` (`10xgraph-api`); for the 
 
 - Package name (npm): `10xgraph-client` (formerly `@10xscale/agentflow-client`, last release 0.5.0)
 - Repo: https://github.com/10xGraph/10xgraph-client
-- Version: `0.6.0` (unreleased; first release under the 10xGraph name) · License: MIT · `"type": "module"` (ESM-first)
+- Version: `0.6.0` (first release under the 10xGraph name) · License: MIT · `"type": "module"` (ESM-first)
 - Runtime: Node >= 18 (uses global `fetch`); also browser-targetable
 - Language: TypeScript 5+, built with `tsc` + Vite 7, tested with Vitest 3
 
@@ -121,8 +121,9 @@ npm run test:coverage
 - **Do not reference the `NodeJS` namespace in `src/`.** This package targets browsers too;
   ambient Node typings force every consumer to install `@types/node`. Use portable forms
   such as `ReturnType<typeof setTimeout>`.
-- **`publishConfig.access: "public"` is load-bearing.** Scoped packages default to
-  `restricted`; without it `npm publish` is rejected.
+- **`publishConfig.access: "public"`** was load-bearing for the old scoped name and is harmless
+  now. Do not add `provenance: true` while publishing is a manual `npm publish`: provenance only
+  works from a CI provider with OIDC, so a local publish fails with it set.
 - **Build scripts must be cross-platform.** The old `cp -r dist-types/* dist/` broke Windows.
   Also note `vite build` empties `outDir` by default, so declaration emit and bundling must
   not fight over `dist/` (`emptyOutDir: false` plus an explicit `clean` step).

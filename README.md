@@ -39,7 +39,7 @@ by matching numbers:
 
 | `10xgraph-client` (npm)                | API server                                        | Core framework                 |
 | -------------------------------------- | ------------------------------------------------- | ------------------------------ |
-| 0.6.x                                  | `10xgraph-api` >= 0.7.0                           | `10xgraph` >= 0.10.1           |
+| 0.6.x                                  | `10xgraph-api` >= 0.7.0                           | `10xgraph` >= 0.10.0           |
 | `@10xscale/agentflow-client` 0.5.x     | `10xscale-agentflow-cli` >= 0.6.0, `10xgraph-api` | `10xscale-agentflow` >= 0.10.0 |
 | `@10xscale/agentflow-client` 0.3-0.4.x | `10xscale-agentflow-cli` >= 0.5.0                 | `10xscale-agentflow` >= 0.9.0  |
 
@@ -362,13 +362,31 @@ import type {
 
 ## Contributing
 
-Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+**Be the first community contributor on this wall.**
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+<a href="https://github.com/10xGraph/10xgraph-client/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=10xGraph/10xgraph-client" alt="People who have contributed to the 10xGraph TypeScript client" />
+</a>
+
+So far only the lead maintainer has committed here, so the first community spot is open. Merge one pull request and your avatar is the next one on this wall and on the contributor page at [10xgraph.com/maintainers](https://10xgraph.com/maintainers). This client is how frontends talk to production agents, so the work is used from day one.
+
+Your first pull request can be small. These are real, self-contained, and useful today:
+
+- **Add an example for your framework.** [`examples/`](examples/) has plain TypeScript and React. Vue, Svelte, Next.js and Node scripts are all missing.
+- **Test an edge case you hit.** A stream that drops mid-response, an error body the client should map, an auth header that should win.
+- **Sharpen a type or a doc comment.** If your editor's autocomplete misled you once, it will mislead the next person too.
+- **Turn a bug into a failing test.** Open it as a draft pull request; the fix can come later.
+
+From clone to a passing check (Node 18 or newer):
+
+```bash
+git clone https://github.com/10xGraph/10xgraph-client.git
+cd 10xgraph-client
+npm ci
+npm run check   # lint, typecheck and tests: the same gate as CI
+```
+
+Draft pull requests are welcome, so open early and ask questions in the PR. For bigger changes, start a thread in the core repository's [Discussions](https://github.com/10xGraph/10xGraph/discussions) first. [CONTRIBUTING.md](CONTRIBUTING.md) has every check and the release notes rules.
 
 ## License
 

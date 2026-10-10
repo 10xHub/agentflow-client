@@ -66,29 +66,36 @@
     "10xgraph",
     "10xscale",
     "agentflow",
+    "ai-agents",
+    "multi-agent",
     "agent",
-    "ai",
     "llm",
-    "chatbot",
-    "conversation",
-    "memory",
-    "threads",
-    "streaming",
-    "tools",
-    "function-calling",
     "typescript",
-    "api-client"
+    "api-client",
+    "sdk",
+    "streaming",
+    "sse",
+    "websocket",
+    "realtime-audio",
+    "client-side-tools",
+    "remote-tools",
+    "threads",
+    "memory",
+    "react",
+    "nodejs"
   ],
   "author": "Shudipto Trafder <shudiptotrafder@gmail.com>",
   "contributors": [
-    "10xScale <contact@10xscale.ai>"
+    {
+      "name": "10xGraph",
+      "url": "https://github.com/10xGraph"
+    }
   ],
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }
